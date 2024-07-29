@@ -59,3 +59,20 @@ jobs:
         run: |
           echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
           echo "The line coverage threshold is ${{ steps.coverage-threshold.outputs.line-threshold }}%"
+
+      - name: Update coverageThreshold if needed
+        if: steps.coverage.outputs.coverage > steps.coverage-threshold.outputs.line-threshold
+        run: |
+          thresholdFile=jest.config.json
+          newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
+          echo "$newThreshold" > $thresholdFile
+          cat $thresholdFile
+
+      - name: Commit and push updated coverageThreshold
+        if: steps.coverage.outputs.coverage > steps.coverage-threshold.outputs.line-threshold
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add jest.config.json
+          git commit -m "Update coverage threshold to ${{ steps.coverage.outputs.coverage }}%"
+          git push
