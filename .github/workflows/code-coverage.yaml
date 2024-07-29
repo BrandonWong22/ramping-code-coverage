@@ -24,4 +24,3 @@ jobs:
       - name: Run coverage and print results
         run: |
           npm run coverage
-          cat coverage/lcov-report/index.html
