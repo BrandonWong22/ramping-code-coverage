@@ -41,4 +41,6 @@ jobs:
           fi
 
       - name: Print total coverage
-        run: echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
+        run: |
+          echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
+          echo "The line coverage threshold is ${{ steps.coverage-threshold.outputs.line-threshold }}%"
