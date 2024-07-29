@@ -24,3 +24,21 @@ jobs:
       - name: Run coverage and print results
         run: |
           npm run coverage
+
+      - name: Read and print coverage summary
+        id: coverage
+        run: |
+          coverageFile=coverage/coverage-summary.json
+          if [ -f "$coverageFile" ]; then
+            echo "Coverage file found"
+            cat $coverageFile
+            totalCoverage=$(jq '.total.lines.pct' $coverageFile)
+            echo "Total line coverage: $totalCoverage%"
+            echo "::set-output name=coverage::$totalCoverage"
+          else
+            echo "Coverage file not found!"
+            exit 1
+          fi
+
+      - name: Print total coverage
+        run: echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
