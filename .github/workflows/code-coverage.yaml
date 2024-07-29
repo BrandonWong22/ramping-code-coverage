@@ -40,7 +40,22 @@ jobs:
             exit 1
           fi
 
-      - name: Print total coverage
+      - name: Read coverageThreshold from jest.config.json
+        id: coverage-threshold
+        run: |
+          thresholdFile=jest.config.json
+          if [ -f "$thresholdFile" ]; then
+            echo "Threshold file found"
+            cat $thresholdFile
+            lineThreshold=$(jq '.coverageThreshold.global.lines' $thresholdFile)
+            echo "Line coverage threshold: $lineThreshold%"
+            echo "::set-output name=line-threshold::$lineThreshold"
+          else
+            echo "Threshold file not found!"
+            exit 1
+          fi
+
+      - name: Print total coverage and threshold
         run: |
           echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
           echo "The line coverage threshold is ${{ steps.coverage-threshold.outputs.line-threshold }}%"
