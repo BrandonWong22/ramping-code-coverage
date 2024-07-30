@@ -25,7 +25,7 @@ jobs:
           node-version: '18'
 
       - name: Extract coverage threshold from main branch
-        id: extract-threshold
+        id: extract-min-code-coverage-from-main
         run: |
           thresholdFile=jest.config.json
           if [ -f "$thresholdFile" ]; then
@@ -39,7 +39,7 @@ jobs:
           fi
 
       - name: Output coverage threshold
-        run: echo "Current Jest coverage threshold for lines is ${{ steps.extract-threshold.outputs.threshold }}"
+        run: echo "Current Jest coverage threshold for lines is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}"
 
       - name: Install dependencies
         run: npm install
@@ -66,10 +66,17 @@ jobs:
       - name: Print total coverage and threshold
         run: |
           echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
-          echo "The line coverage threshold is ${{ steps.extract-threshold.outputs.threshold }}%"
+          echo "The line coverage threshold is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
+
+      - name: Calculate new threshold
+        id: calculate-new-threshold
+        run: |
+          currentThreshold=${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}
+          newThreshold=$((currentThreshold + 2))
+          echo "::set-output name=new-threshold::$newThreshold"
 
       - name: Update coverageThreshold if needed
-        if: steps.coverage.outputs.coverage > steps.extract-threshold.outputs.threshold
+        if: steps.coverage.outputs.coverage > steps.extract-min-code-coverage-from-main.outputs.threshold + 2
         run: |
           thresholdFile=jest.config.json
           newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
@@ -77,7 +84,7 @@ jobs:
           cat $thresholdFile
 
       - name: Commit and push updated coverageThreshold
-        if: steps.coverage.outputs.coverage > steps.extract-threshold.outputs.threshold
+        if: steps.coverage.outputs.coverage > steps.extract-min-code-coverage-from-main.outputs.threshold
         run: |
           git config --global user.name 'BrandonWong22'
           git config --global user.email 'brandonwong2608@gmail.com'
