@@ -56,10 +56,10 @@ jobs:
             exit 1
           fi
 
-      - name: Read coverageThreshold from jest.config.json
+      - name: Read coverageThreshold from jest.config.json on main
         id: coverage-threshold
         run: |
-          thresholdFile=jest.config.json
+          thresholdFile=${{ steps.extract-threshold.outputs.threshold }}"
           if [ -f "$thresholdFile" ]; then
             echo "Threshold file found"
             cat $thresholdFile
