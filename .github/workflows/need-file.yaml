@@ -18,4 +18,5 @@ jobs:
           git config --global user.email 'brandonwong2608@gmail.com'
           git add .
           git commit -m "Automated report"
+          git pull origin readme-test --rebase
           git push origin HEAD:readme-test
