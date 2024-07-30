@@ -13,10 +13,23 @@ jobs:
       - name: Check out the code
         uses: actions/checkout@v4
 
+      - name: Checkout main branch jest.config.json
+        run: git checkout main -- jest.config.json
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+
+      - name: Extract coverage threshold
+        id: extract-threshold
+        run: |
+          threshold=$(jq '.coverageThreshold.global.lines' jest.config.json)
+          echo "Threshold: $threshold"
+          echo "::set-output name=threshold::$threshold"
+
+      - name: Output coverage threshold
+        run: echo "Current Jest coverage threshold for lines is ${{ steps.extract-threshold.outputs.threshold }}"
 
       - name: Install dependencies
         run: npm install
