@@ -76,7 +76,7 @@ jobs:
           echo "::set-output name=new-threshold::$newThreshold"
 
       - name: Update coverageThreshold if needed
-        if: steps.coverage.outputs.coverage > steps.extract-min-code-coverage-from-main.outputs.threshold + 2
+        if: steps.coverage.outputs.coverage > steps.calculate-new-threshold.outputs.threshold
         run: |
           thresholdFile=jest.config.json
           newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
