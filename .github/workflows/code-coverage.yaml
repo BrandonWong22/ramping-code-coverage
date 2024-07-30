@@ -68,17 +68,6 @@ jobs:
           echo "$newThreshold" > $thresholdFile
           cat $thresholdFile
 
-<<<<<<< HEAD
-      - name: Commit and push updated coverageThreshold
-        if: steps.coverage.outputs.coverage > steps.coverage-threshold.outputs.line-threshold
-        run: |
-          git config --global user.name 'BrandonWong22'
-          git config --global user.email 'brandonwong2608@gmail.com'
-          git pull origin ${{ github.head_ref }}
-          git add jest.config.json
-          git commit -m "Update coverage threshold to ${{ steps.coverage.outputs.coverage }}%"
-          git push origin HEAD:test
-=======
       # - name: Commit and push updated coverageThreshold
       #   if: steps.coverage.outputs.coverage > steps.coverage-threshold.outputs.line-threshold
       #   run: |
@@ -88,4 +77,3 @@ jobs:
       #     git add jest.config.json
       #     git commit -m "Update coverage threshold to ${{ steps.coverage.outputs.coverage }}%"
       #     git push
->>>>>>> main
