@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Fetch main branch
         run: git fetch origin main:main
@@ -17,9 +17,9 @@ jobs:
         run: git checkout main -- jest.config.json
 
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '16' # Specify the Node.js version you are using
+          node-version: '18' # Specify the Node.js version you are using
 
       - name: Extract coverage threshold
         id: extract-threshold
