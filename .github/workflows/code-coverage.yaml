@@ -68,6 +68,11 @@ jobs:
           echo "$newThreshold" > $thresholdFile
           cat $thresholdFile
 
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
       - name: Commit and push updated coverageThreshold
         if: steps.coverage.outputs.coverage > steps.coverage-threshold.outputs.line-threshold
         run: |
