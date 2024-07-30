@@ -80,6 +80,7 @@ jobs:
           git config --global user.email 'brandonwong2608@gmail.com'
           git status
           git pull
+          git switch -c update-coverage-threshold
           git add jest.config.json
           git commit -m "Update coverage threshold to ${{ steps.coverage.outputs.coverage }}%"
           git push -u origin HEAD:test
