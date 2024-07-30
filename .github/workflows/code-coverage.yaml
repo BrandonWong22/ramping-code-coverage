@@ -73,7 +73,7 @@ jobs:
         run: |
           currentThreshold=${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}
           newThreshold=$((currentThreshold + 2))
-          echo "::set-output name=new-threshold::$newThreshold"
+          echo "The new required coverage is ${{ newThreshold }}"
 
       - name: Update coverageThreshold if needed
         if: steps.coverage.outputs.coverage > steps.calculate-new-threshold.outputs.threshold
