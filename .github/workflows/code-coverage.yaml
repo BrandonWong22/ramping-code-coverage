@@ -73,6 +73,7 @@ jobs:
         run: |
           git config --global user.name 'BrandonWong22'
           git config --global user.email 'brandonwong2608@gmail.com'
+          git pull origin ${{ github.head_ref }}
           git add jest.config.json
           git commit -m "Update coverage threshold to ${{ steps.coverage.outputs.coverage }}%"
           git push
