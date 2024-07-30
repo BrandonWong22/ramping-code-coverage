@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Check out the code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -78,6 +78,7 @@ jobs:
         run: |
           git config --global user.name 'BrandonWong22'
           git config --global user.email 'brandonwong2608@gmail.com'
+          git status
           git pull
           git add jest.config.json
           git commit -m "Update coverage threshold to ${{ steps.coverage.outputs.coverage }}%"
