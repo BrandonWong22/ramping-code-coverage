@@ -24,12 +24,19 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Extract coverage threshold
+      - name: Extract coverage threshold from main branch
         id: extract-threshold
         run: |
-          threshold=$(jq '.coverageThreshold.global.lines' jest.config.json)
-          echo "Threshold: $threshold"
-          echo "::set-output name=threshold::$threshold"
+          thresholdFile=jest.config.json
+          if [ -f "$thresholdFile" ]; then
+            echo "Threshold file found"
+            threshold=$(jq '.coverageThreshold.global.lines' $thresholdFile)
+            echo "Threshold: $threshold"
+            echo "::set-output name=threshold::$threshold"
+          else
+            echo "Threshold file not found!"
+            exit 1
+          fi
 
       - name: Output coverage threshold
         run: echo "Current Jest coverage threshold for lines is ${{ steps.extract-threshold.outputs.threshold }}"
@@ -56,37 +63,21 @@ jobs:
             exit 1
           fi
 
-      - name: Read coverageThreshold from jest.config.json
-        id: coverage-threshold
-        run: |
-          thresholdFile=jest.config.json
-          if [ -f "$thresholdFile" ]; then
-            echo "Threshold file found"
-            cat $thresholdFile
-            lineThreshold=$(jq '.coverageThreshold.global.lines' $thresholdFile)
-            echo "Line coverage threshold: $lineThreshold%"
-            echo "::set-output name=line-threshold::$lineThreshold"
-          else
-            echo "Threshold file not found!"
-            exit 1
-          fi
-
       - name: Print total coverage and threshold
         run: |
           echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
-          echo "The line coverage threshold is ${{ steps.coverage-threshold.outputs.line-threshold }}%"
+          echo "The line coverage threshold is ${{ steps.extract-threshold.outputs.threshold }}%"
 
       - name: Update coverageThreshold if needed
-        if: steps.coverage.outputs.coverage > steps.coverage-threshold.outputs.line-threshold
+        if: steps.coverage.outputs.coverage > steps.extract-threshold.outputs.threshold
         run: |
           thresholdFile=jest.config.json
-          mainThresholdFile=${{ steps.extract-threshold }}%"
-          newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $mainThresholdFile)
-          echo "$newThreshold" > $mainThresholdFile
+          newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
+          echo "$newThreshold" > $thresholdFile
           cat $thresholdFile
 
       - name: Commit and push updated coverageThreshold
-        if: steps.coverage.outputs.coverage > steps.coverage-threshold.outputs.line-threshold
+        if: steps.coverage.outputs.coverage > steps.extract-threshold.outputs.threshold
         run: |
           git config --global user.name 'BrandonWong22'
           git config --global user.email 'brandonwong2608@gmail.com'
