@@ -21,7 +21,7 @@ jobs:
         run: |
           git config --global user.name 'BrandonWong22'
           git config --global user.email 'brandonwong2608@gmail.com'
-          git checkout readme-test
+          git checkout ${{ github.event.pull_request.head.ref }}
           git add README.md
           git commit -m 'Add README.md file on PR creation'
-          git push
+          git push origin ${{ github.event.pull_request.head.ref }}
