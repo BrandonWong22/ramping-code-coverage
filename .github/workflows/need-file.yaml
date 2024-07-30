@@ -6,23 +6,15 @@ on:
       - main
 
 jobs:
-  add-readme:
+  report:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Create README.md
-        run: echo "# This is the README file" > README.md
-
-      - name: Commit and push README.md
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+      - name: Create report file
+        run: date +%s > report.txt
+      - name: Commit report
         run: |
           git config --global user.name 'BrandonWong22'
           git config --global user.email 'brandonwong2608@gmail.com'
-          git checkout ${{ github.event.pull_request.head.ref }}
-          git add README.md
-          git commit -m 'Add README.md file on PR creation'
-          git push origin ${{ github.event.pull_request.head.ref }}
+          git commit -am "Automated report"
+          git push
