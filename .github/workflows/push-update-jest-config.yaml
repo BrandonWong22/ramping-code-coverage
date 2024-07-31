@@ -9,15 +9,19 @@ on:
 jobs:
   push-to-main:
     runs-on: ubuntu-latest
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
 
-      - name: Download artifact
+      - name: Get user ID of the person who merged the PR
         run: |
-          echo "Run id ${{ github.event.workflow_run.id }}"
-        # uses: actions/download-artifact@v4
+          echo "The PR was merged by user with ID: ${{ github.event.pull_request.merged_by.id }}"
+
+      # - name: Download artifact
+      #   run: |
+      #     echo "Run id ${{ github.event.workflow_run.id }}"
+      # uses: actions/download-artifact@v4
       #   with:
       #     name: updated-jest-config
       #     github-token: ${{ github.token }}
