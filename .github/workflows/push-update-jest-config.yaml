@@ -19,6 +19,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: updated-jest-config
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 10183504744
       # path: .
 
       # - name: Set up Node.js
