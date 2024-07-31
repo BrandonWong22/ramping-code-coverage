@@ -3,7 +3,7 @@ name: Download Artifact on PR Merge
 on:
   pull_request:
     types: [closed]
-  workflow_run:
+  workflow_dispatch:
 
 jobs:
   download-artifact:
