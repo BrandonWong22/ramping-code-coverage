@@ -89,3 +89,4 @@ jobs:
         with:
           name: updated-jest-config
           path: jest.config.json
+          retention-days: 1
