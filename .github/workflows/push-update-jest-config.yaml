@@ -1,9 +1,9 @@
 name: Push Updated Jest Config
 
 on:
-  pull_request:
-    types:
-      - closed
+  # pull_request:
+  #   types:
+  #     - closed
   workflow_dispatch:
 
 jobs:
@@ -22,19 +22,3 @@ jobs:
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
           run-id: 10183504744
-      # path: .
-
-      # - name: Set up Node.js
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: '18'
-
-      # - name: Commit and push updated jest.config.json
-      #   run: |
-      #     git config --global user.name 'BrandonWong22'
-      #     git config --global user.email 'brandonwong2608@gmail.com'
-      #     git checkout main
-      #     git pull origin main
-      #     git add .
-      #     git commit -m "Update coverage threshold"
-      #     git push origin main
