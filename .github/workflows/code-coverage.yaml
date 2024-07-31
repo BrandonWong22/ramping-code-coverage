@@ -90,3 +90,15 @@ jobs:
           name: updated-jest-config
           path: jest.config.json
           retention-days: 1
+
+  push-to-main:
+    needs: check-code-coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: updated-jest-config
