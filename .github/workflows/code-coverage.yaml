@@ -7,6 +7,7 @@ on:
 
 jobs:
   check-code-coverage:
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
 
     steps:
@@ -90,26 +91,26 @@ jobs:
           name: updated-jest-config
           path: jest.config.json
 
-  # push-to-main:
-  #   runs-on: ubuntu-latest
-  #   if: github.event.pull_request.merged == true
-  #   steps:
-  #     - name: Check out the code
-  #       uses: actions/checkout@v4
+  push-to-main:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'closed' && github.event.pull_request.merged == true
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
 
-  #     - name: Download artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: updated-jest-config
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: updated-jest-config
 
-  #     - name: Configure Git
-  #       run: |
-  #         git config user.name "BrandonWong22"
-  #         git config user.email "brandonwong2608@gmail.com"
+      - name: Configure Git
+        run: |
+          git config user.name "BrandonWong22"
+          git config user.email "brandonwong2608@gmail.com"
 
-  #     - name: Commit and push updated jest.config.json
-  #       run: |
-  #         git add .
-  #         git commit -m "Update jest.config.json with new coverage threshold"
-  #         git pull origin main --rebase
-  #         git push origin HEAD:main
+      - name: Commit and push updated jest.config.json
+        run: |
+          git add .
+          git commit -m "Update jest.config.json with new coverage threshold"
+          git pull origin main --rebase
+          git push origin HEAD:main
