@@ -15,23 +15,36 @@ jobs:
       - name: Check out the code
         uses: actions/checkout@v4
 
-      - name: Download artifact
-        uses: actions/download-artifact@v4
+      - name: List all artifacts
+        uses: actions/github-script@v6
         with:
-          name: updated-jest-config
-          path: .
+          script: |
+            const artifacts = await github.actions.listArtifactsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            console.log("List of Artifacts:");
+            for (const artifact of artifacts.data.artifacts) {
+              console.log(`- ${artifact.name} (ID: ${artifact.id}, Size: ${artifact.size_in_bytes} bytes, Created at: ${artifact.created_at})`);
+            }
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+      # - name: Download artifact
+      #   uses: actions/download-artifact@v4
+      # with:
+      # name: updated-jest-config
+      # path: .
 
-      - name: Commit and push updated jest.config.json
-        run: |
-          git config --global user.name 'BrandonWong22'
-          git config --global user.email 'brandonwong2608@gmail.com'
-          git checkout main
-          git pull origin main
-          git add .
-          git commit -m "Update coverage threshold"
-          git push origin main
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: '18'
+
+      # - name: Commit and push updated jest.config.json
+      #   run: |
+      #     git config --global user.name 'BrandonWong22'
+      #     git config --global user.email 'brandonwong2608@gmail.com'
+      #     git checkout main
+      #     git pull origin main
+      #     git add .
+      #     git commit -m "Update coverage threshold"
+      #     git push origin main
