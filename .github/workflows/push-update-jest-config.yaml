@@ -16,7 +16,7 @@ jobs:
 
       - name: Download artifact
         run: |
-          echo ${{ github.event.workflow_run.id }}
+          echo "Run id ${{ github.event.workflow_run.id }}"
         # uses: actions/download-artifact@v4
       #   with:
       #     name: updated-jest-config
