@@ -1,7 +1,7 @@
 import App from './App';
 import { render, screen } from '@testing-library/react';
 
-test.only('Always true test', () => {
+test('Always true test', () => {
   expect(true).toBe.true;
 });
 
