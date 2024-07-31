@@ -1,29 +1,29 @@
-# name: Get Main Values
+name: Get Main Values
 
-# on:
-#   workflow_dispatch:
+on:
+  workflow_dispatch:
 
-# jobs:
-#   get-coverage-threshold:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v4
+jobs:
+  get-coverage-threshold:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-#       - name: Checkout main branch jest.config.json
-#         run: git checkout main -- jest.config.json
+      - name: Checkout main branch jest.config.json
+        run: git checkout main -- jest.config.json
 
-#       - name: Install Node.js
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: '18' # Specify the Node.js version you are using
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Specify the Node.js version you are using
 
-#       - name: Extract coverage threshold
-#         id: extract-threshold
-#         run: |
-#           threshold=$(jq '.coverageThreshold.global.lines' jest.config.json)
-#           echo "Threshold: $threshold"
-#           echo "::set-output name=threshold::$threshold"
+      - name: Extract coverage threshold
+        id: extract-threshold
+        run: |
+          threshold=$(jq '.coverageThreshold.global.lines' jest.config.json)
+          echo "Threshold: $threshold"
+          echo "::set-output name=threshold::$threshold"
 
-#       - name: Output coverage threshold
-#         run: echo "Current Jest coverage threshold for lines is ${{ steps.extract-threshold.outputs.threshold }}"
+      - name: Output coverage threshold
+        run: echo "Current Jest coverage threshold for lines is ${{ steps.extract-threshold.outputs.threshold }}"
