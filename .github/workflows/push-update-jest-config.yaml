@@ -17,8 +17,8 @@ jobs:
 
       - name: Download artifact
         uses: actions/download-artifact@v4
-      # with:
-      # name: updated-jest-config
+        with:
+          name: updated-jest-config
       # path: .
 
       # - name: Set up Node.js
