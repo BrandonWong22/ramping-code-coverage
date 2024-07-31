@@ -14,9 +14,16 @@ jobs:
       - name: Check out the code
         uses: actions/checkout@v4
 
-      - name: Get user ID of the person who merged the PR
-        run: |
-          echo "The run ID: ${{ github.run_id }}"
+      - name: Download artifact
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          github_token: ${{ github.token }}
+          workflow: code-coverage.yaml
+          pr: ${{github.event.pull_request.number}}
+      # - name: Get user ID of the person who merged the PR
+      #   run: |
+      #     echo "The run ID: ${{ github.run_id }}"
 
       # - name: Download artifact
       #   run: |
