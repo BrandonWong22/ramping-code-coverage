@@ -1,16 +1,15 @@
 name: Push Updated Jest Config
 
 on:
-  # pull_request:
-  #   types:
-  #     - closed
+  pull_request:
+    types:
+      - closed
   workflow_dispatch:
 
 jobs:
   push-to-main:
-    # if: ${{ github.event.pull_request.merged }}
     runs-on: ubuntu-latest
-
+    if: github.event.pull_request.merged == true
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
@@ -21,4 +20,16 @@ jobs:
           name: updated-jest-config
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
-          run-id: 10183504744
+          # run-id:
+
+      - name: Configure Git
+        run: |
+          git config user.name "BrandonWong22"
+          git config user.email "brandonwong2608@gmail.com"
+
+      - name: Commit and push updated jest.config.json
+        run: |
+          git add .
+          git commit -m "Update jest.config.json with new coverage threshold"
+          git pull origin main --rebase
+          git push origin HEAD:main
