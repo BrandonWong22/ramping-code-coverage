@@ -20,7 +20,7 @@ jobs:
           name: updated-jest-config
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
-          run-id: ${{ github.run_id }}
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Configure Git
         run: |
