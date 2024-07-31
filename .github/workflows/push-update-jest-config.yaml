@@ -21,6 +21,19 @@ jobs:
           github_token: ${{ github.token }}
           workflow: code-coverage.yaml
           pr: ${{github.event.pull_request.number}}
+
+      - name: Log jest.config.json content
+        run: |
+          # Make sure to specify the path to the file if it's inside a directory
+          FILE_PATH="jest.config.json"
+
+          if [ -f "$FILE_PATH" ]; then
+            echo "Contents of $FILE_PATH:"
+            cat "$FILE_PATH"
+          else
+            echo "$FILE_PATH not found!"
+          fi
+
       # - name: Get user ID of the person who merged the PR
       #   run: |
       #     echo "The run ID: ${{ github.run_id }}"
