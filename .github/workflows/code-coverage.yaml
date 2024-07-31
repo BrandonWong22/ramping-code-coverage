@@ -91,7 +91,6 @@ jobs:
           path: jest.config.json
 
   push-to-main:
-    needs: check-code-coverage
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
