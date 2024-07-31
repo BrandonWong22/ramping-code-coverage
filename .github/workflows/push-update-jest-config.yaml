@@ -15,21 +15,8 @@ jobs:
       - name: Check out the code
         uses: actions/checkout@v4
 
-      - name: List all artifacts
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const artifacts = await github.actions.listArtifactsForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
-            console.log("List of Artifacts:");
-            for (const artifact of artifacts.data.artifacts) {
-              console.log(`- ${artifact.name} (ID: ${artifact.id}, Size: ${artifact.size_in_bytes} bytes, Created at: ${artifact.created_at})`);
-            }
-
-      # - name: Download artifact
-      #   uses: actions/download-artifact@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v4
       # with:
       # name: updated-jest-config
       # path: .
