@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import Test from './Test';
 
-test.skip('Heading should be Vite + React', () => {
+test('Heading should be Vite + React', () => {
   render(<Test />);
 
   const headingElement = screen.getByText('Hello');
