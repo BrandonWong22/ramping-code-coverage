@@ -88,4 +88,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: updated-jest-config
-          path: bulid
+          path: jest.config.json
