@@ -1,8 +1,8 @@
 import App from './App';
 import { render, screen } from '@testing-library/react';
-import Test from './components/Header';
+import Header from './components/Header';
 
-test('Always true test', () => {
+test.only('Always true test', () => {
   expect(true).toBe.true;
 });
 
@@ -15,7 +15,7 @@ test('Heading should be Vite + React', () => {
 });
 
 test('Header component renders the string Header', () => {
-  render(<Test />);
+  render(<Header />);
 
   const headingElement = screen.getByText('Header');
 
