@@ -7,52 +7,48 @@ on:
   workflow_dispatch:
 
 jobs:
-  push-to-main:
+  push-updated-coverage-threshold-to-main:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
 
-      - name: Get PR Comments
-        id: get_pr_comments
-        uses: actions/github-script@v6
+      - name: Fetch main branch
+        run: git fetch origin main:main
+
+      - name: Checkout main branch jest.config.json
+        run: git checkout main -- jest.config.json
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          script: |
-            const prNumber = context.issue.number;
-            const comments = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber
-            });
+          node-version: '18'
 
-            return comments.data.map(comment => comment.body);
+      - name: Install dependencies
+        run: npm install
 
-      - name: Output PR Comments
-        run: echo "${{ steps.get_pr_comments.outputs.result }}"
+      - name: Run coverage and print results
+        run: |
+          npm run coverage
 
-      # - name: Download artifact
-      #   id: download-artifact
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: updated-jest-config
-      #     github-token: ${{ github.token }}
-      # name:: code-coverage.yaml
-      # pr: ${{github.event.pull_request.number}}
+      - name: Read and print coverage summary
+        id: coverage
+        run: |
+          coverageFile=coverage/coverage-summary.json
+          if [ -f "$coverageFile" ]; then
+            echo "Coverage file found"
+            cat $coverageFile
+            totalCoverage=$(jq '.total.lines.pct' $coverageFile)
+            echo "Total line coverage: $totalCoverage%"
+          else
+            echo "Coverage file not found!"
+            exit 1
+          fi
 
-      # - name: Get user ID of the person who merged the PR
-      #   run: |
-      #     echo "The run ID: ${{ github.run_id }}"
-
-      # - name: Download artifact
-      #   run: |
-      #     echo "Run id ${{ github.event.workflow_run.id }}"
-      # uses: actions/download-artifact@v4
-      #   with:
-      #     name: updated-jest-config
-      #     github-token: ${{ github.token }}
-      #     repository: ${{ github.repository }}
-      #     run-id: ${{ github.event.workflow_run.id }}
+      - name: Print total coverage and threshold
+        run: |
+          echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
 
       # - name: Configure Git
       #   run: |
