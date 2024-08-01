@@ -8,7 +8,7 @@
   "coverageReporters": ["json-summary", "text", "lcov"],
   "coverageThreshold": {
     "global": {
-      "lines": 15
+      "lines": 20
     }
   }
 }
