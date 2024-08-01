@@ -51,9 +51,8 @@ jobs:
           new_threshold=$((current_threshold + $CODE_COVERAGE_MODIFIER))
           echo "New Threshold: $new_threshold"
           # Update the jest.config.json file with the new threshold
+          jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
           echo "new_threshold=$new_threshold" >> $GITHUB_OUTPUT
-
-        # jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
 
       - name: Output required line coverage
         run: |
