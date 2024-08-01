@@ -74,7 +74,7 @@ jobs:
             cat $coverageFile
             totalCoverage=$(jq '.total.lines.pct' $coverageFile)
             echo "Total line coverage: $totalCoverage%"
-            echo "coverage=$totalCoverage%" >> GITHUB_OUTPUT"
+            echo "coverage=$totalCoverage%" >> GITHUB_OUTPUT
           else
             echo "Coverage file not found!"
             exit 1
