@@ -95,8 +95,6 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const github = require('@actions/github');
-            const context = github.context;
             const prNumber = context.issue.number;
             const runId = context.runId;
 
@@ -106,7 +104,6 @@ jobs:
               issue_number: prNumber,
               body: `This GitHub Actions run ID is: ${runId}`
             });
-
   # push-to-main:
   #   runs-on: ubuntu-latest
   #   if: github.event.action == 'closed' && github.event.pull_request.merged == true
