@@ -4,10 +4,14 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
+
+env:
+  CODE_COVERAGE_MODIFIER: 2
 
 jobs:
   check-code-coverage:
-    if: github.event.action != 'closed'
+    # if: github.event.action != 'closed'
     runs-on: ubuntu-latest
 
     steps:
@@ -39,66 +43,42 @@ jobs:
             exit 1
           fi
 
-      - name: Output coverage threshold
-        run: echo "Current Jest coverage threshold for lines is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}"
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run coverage and print results
+      - name: Modify coverage threshold
+        id: modify-coverage-threshold
         run: |
-          npm run coverage
+          current_threshold=${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}
+          new_threshold=$((current_threshold + $CODE_COVERAGE_MODIFIER))
+          echo "New Threshold: $new_threshold"
+          # Update the jest.config.json file with the new threshold
+          jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
+          echo "::set-output name=new_threshold::$new_threshold"
 
-      - name: Read and print coverage summary
-        id: coverage
-        run: |
-          coverageFile=coverage/coverage-summary.json
-          if [ -f "$coverageFile" ]; then
-            echo "Coverage file found"
-            cat $coverageFile
-            totalCoverage=$(jq '.total.lines.pct' $coverageFile)
-            echo "Total line coverage: $totalCoverage%"
-            echo "::set-output name=coverage::$totalCoverage"
-          else
-            echo "Coverage file not found!"
-            exit 1
-          fi
+      # - name: Output coverage threshold
+      #   run: echo "Current Jest coverage threshold for lines is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}"
 
-      - name: Print total coverage and threshold
-        run: |
-          echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
-          echo "The line coverage threshold is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
+      # - name: Install dependencies
+      #   run: npm install
 
-      # - name: Calculate new threshold
-      #   id: calculate-new-threshold
+      # - name: Run coverage and print results
       #   run: |
-      #     currentThreshold=${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}
-      #     newThreshold=$((currentThreshold + 2))
-      #     echo "New value $newThreshold"
+      #     npm run coverage
 
-      # - name: Update coverageThreshold if needed
-      #   if: steps.coverage.outputs.coverage > steps.calculate-new-threshold.outputs.threshold
+      # - name: Read and print coverage summary
+      #   id: coverage
       #   run: |
-      #     thresholdFile=jest.config.json
-      #     newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
-      #     echo "$newThreshold" > $thresholdFile
-      #     cat $thresholdFile
+      #     coverageFile=coverage/coverage-summary.json
+      #     if [ -f "$coverageFile" ]; then
+      #       echo "Coverage file found"
+      #       cat $coverageFile
+      #       totalCoverage=$(jq '.total.lines.pct' $coverageFile)
+      #       echo "Total line coverage: $totalCoverage%"
+      #       echo "::set-output name=coverage::$totalCoverage"
+      #     else
+      #       echo "Coverage file not found!"
+      #       exit 1
+      #     fi
 
-  # push-to-main:
-  #   runs-on: ubuntu-latest
-  #   if: github.event.action == 'closed' && github.event.pull_request.merged == true
-  #   steps:
-  #     - name: Check out the code
-  #       uses: actions/checkout@v4
-
-  #     - name: Configure Git
-  #       run: |
-  #         git config user.name "BrandonWong22"
-  #         git config user.email "brandonwong2608@gmail.com"
-
-  #     - name: Commit and push updated jest.config.json
-  #       run: |
-  #         git add .
-  #         git commit -m "Update jest.config.json with new coverage threshold"
-  #         git pull origin main --rebase
-  #         git push origin HEAD:main
+      # - name: Print total coverage and threshold
+      #   run: |
+      #     echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
+      #     echo "The line coverage threshold is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"

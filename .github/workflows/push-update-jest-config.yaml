@@ -14,9 +14,6 @@ jobs:
       - name: Check out the code
         uses: actions/checkout@v4
 
-      # - name: Fetch main branch
-      #   run: git fetch origin main:main
-
       - name: Checkout main branch jest.config.json
         run: git checkout main -- jest.config.json
 
