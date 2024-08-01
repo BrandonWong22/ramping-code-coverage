@@ -67,7 +67,7 @@ jobs:
           npm run coverage
 
       - name: Read and print coverage summary
-        id: coverage
+        id: pull-request-coverage
         run: |
           coverageFile=coverage/coverage-summary.json
           if [ -f "$coverageFile" ]; then
@@ -75,7 +75,7 @@ jobs:
             cat $coverageFile
             totalCoverage=$(jq '.total.lines.pct' $coverageFile)
             echo "Total line coverage: $totalCoverage%"
-            echo "coverage=$totalCoverage" >> GITHUB_OUTPUT
+            echo "totalCoverage=$totalCoverage" >> GITHUB_OUTPUT
           else
             echo "Coverage file not found!"
             exit 1
@@ -83,6 +83,6 @@ jobs:
 
       - name: Print total coverage and threshold
         run: |
-          echo "The line coverage on the Pull Request is ${{ steps.coverage.outputs.coverage }}%"
+          echo "The line coverage on the Pull Request is ${{ steps.pull-request-coverage.outputs.totalCoverage }}%"
           echo "The line coverage threshold on main is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
           echo "The required line coverage threshold is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}%"
