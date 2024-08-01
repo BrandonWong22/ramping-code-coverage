@@ -40,7 +40,7 @@ jobs:
             echo "Threshold: $threshold"
             echo "threshold=$threshold" >> $GITHUB_OUTPUT
           else
-            echo "Threshold file not found!"
+            echo "Threshold file not found"
             exit 1
           fi
 
@@ -54,10 +54,10 @@ jobs:
           jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
           echo "new_threshold=$new_threshold" >> $GITHUB_OUTPUT
 
-      - name: Output coverage threshold
+      - name: Output required line coverage
         run: |
-          echo "Current Jest coverage threshold for lines is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}"
-          echo "Required line coverage is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}"
+          echo "Current Jest coverage threshold for lines is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
+          echo "Required line coverage is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}%"
 
       - name: Install dependencies
         run: npm install
@@ -67,7 +67,7 @@ jobs:
           npm run coverage
 
       - name: Read and print coverage summary
-        id: coverage
+        id: pull-request-coverage
         run: |
           coverageFile=coverage/coverage-summary.json
           if [ -f "$coverageFile" ]; then
@@ -75,7 +75,7 @@ jobs:
             cat $coverageFile
             totalCoverage=$(jq '.total.lines.pct' $coverageFile)
             echo "Total line coverage: $totalCoverage%"
-            echo "coverage=$totalCoverage%" >> GITHUB_OUTPUT
+            echo "totalCoverage=$totalCoverage" >> $GITHUB_OUTPUT
           else
             echo "Coverage file not found!"
             exit 1
@@ -83,6 +83,6 @@ jobs:
 
       - name: Print total coverage and threshold
         run: |
-          echo "The line coverage on the Pull Request is ${{ steps.coverage.outputs.coverage }}%"
+          echo "The line coverage on the Pull Request is ${{ steps.pull-request-coverage.outputs.totalCoverage }}%"
           echo "The line coverage threshold on main is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
           echo "The required line coverage threshold is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}%"
