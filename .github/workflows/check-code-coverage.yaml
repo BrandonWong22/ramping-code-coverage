@@ -19,8 +19,8 @@ jobs:
       - name: Check out the code
         uses: actions/checkout@v4
 
-      - name: Fetch main branch
-        run: git fetch origin main:main
+      # - name: Fetch main branch
+      #   run: git fetch origin main:main
 
       - name: Checkout main branch jest.config.json
         run: git checkout main -- jest.config.json
@@ -50,9 +50,23 @@ jobs:
           current_threshold=${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}
           new_threshold=$((current_threshold + $CODE_COVERAGE_MODIFIER))
           echo "New Threshold: $new_threshold"
+
+          if [ "$new_threshold" -gt "$RAMPING_CODE_COVERAGE_CAP" ]; then
+            new_threshold=$RAMPING_CODE_COVERAGE_CAP
+          fi
+          echo "New Threshold (after cap): $new_threshold"
+
+          temp_file=jest.config.tmp
+
           # Update the jest.config.json file with the new threshold
-          jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
+          jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > $temp_file
+          mv $temp_file jest.config.json
+
           echo "new_threshold=$new_threshold" >> $GITHUB_OUTPUT
+
+        # # Update the jest.config.json file with the new threshold
+        # jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
+        # echo "new_threshold=$new_threshold" >> $GITHUB_OUTPUT
 
       - name: Output required line coverage
         run: |
