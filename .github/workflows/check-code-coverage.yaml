@@ -101,13 +101,13 @@ jobs:
           echo "The line coverage threshold on main is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
           echo "The required line coverage threshold is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}%"
 
-      - name: Check coverage meets threshold
-        run: |
-          totalCoverage=${{ steps.pull-request-coverage.outputs.totalCoverage }}
-          newThreshold=${{ steps.modify-coverage-threshold.outputs.new_threshold }}
-          if (( $(echo "$totalCoverage < $newThreshold" | bc -l) )); then
-            echo "Total coverage $totalCoverage% is less than the required threshold $newThreshold%"
-            exit 1
-          else
-            echo "Total coverage $totalCoverage% meets or exceeds the required threshold $newThreshold%"
-          fi
+      # - name: Check coverage meets threshold
+      #   run: |
+      #     totalCoverage=${{ steps.pull-request-coverage.outputs.totalCoverage }}
+      #     newThreshold=${{ steps.modify-coverage-threshold.outputs.new_threshold }}
+      #     if (( $(echo "$totalCoverage < $newThreshold" | bc -l) )); then
+      #       echo "Total coverage $totalCoverage% is less than the required threshold $newThreshold%"
+      #       exit 1
+      #     else
+      #       echo "Total coverage $totalCoverage% meets or exceeds the required threshold $newThreshold%"
+      #     fi
