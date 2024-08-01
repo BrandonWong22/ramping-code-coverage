@@ -91,6 +91,22 @@ jobs:
           name: updated-jest-config
           path: jest.config.json
 
+      - name: Add Run ID as PR Comment
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const github = require('@actions/github');
+            const context = github.context;
+            const prNumber = context.issue.number;
+            const runId = context.runId;
+
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: `This GitHub Actions run ID is: ${runId}`
+            });
+
   # push-to-main:
   #   runs-on: ubuntu-latest
   #   if: github.event.action == 'closed' && github.event.pull_request.merged == true
