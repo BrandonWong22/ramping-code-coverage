@@ -41,6 +41,7 @@ jobs:
             cat $coverageFile
             totalCoverage=$(jq '.total.lines.pct' $coverageFile)
             echo "Total line coverage: $totalCoverage%"
+            echo "::set-output name=coverage::$totalCoverage"
           else
             echo "Coverage file not found!"
             exit 1
