@@ -54,10 +54,10 @@ jobs:
           jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
           echo "new_threshold=$new_threshold" >> $GITHUB_OUTPUT
 
-      - name: Output coverage threshold
+      - name: Output required line coverage
         run: |
-          echo "Current Jest coverage threshold for lines is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}"
-          echo "Required line coverage is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}"
+          echo "Current Jest coverage threshold for lines is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
+          echo "Required line coverage is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}%"
 
       - name: Install dependencies
         run: npm install
