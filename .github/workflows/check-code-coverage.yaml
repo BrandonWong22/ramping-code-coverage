@@ -76,6 +76,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: View jest.config.json
+        run: cat jest.config.json
+
       - name: Run coverage and print results
         run: |
           npm run coverage
