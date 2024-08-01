@@ -91,11 +91,6 @@ jobs:
   #     - name: Check out the code
   #       uses: actions/checkout@v4
 
-  #     - name: Download artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: updated-jest-config
-
   #     - name: Configure Git
   #       run: |
   #         git config user.name "BrandonWong22"
