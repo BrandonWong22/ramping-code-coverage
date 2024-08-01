@@ -14,26 +14,31 @@ jobs:
       - name: Check out the code
         uses: actions/checkout@v4
 
-      - name: Download artifact
-        id: download-artifact
-        uses: actions/download-artifact@v4
+      - name: Get PR Comments
+        id: get_pr_comments
+        uses: actions/github-script@v6
         with:
-          name: updated-jest-config
-          github-token: ${{ github.token }}
-          # name:: code-coverage.yaml
-          # pr: ${{github.event.pull_request.number}}
+          script: |
+            const prNumber = context.issue.number;
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber
+            });
 
-      - name: Log jest.config.json content
-        run: |
-          # Make sure to specify the path to the file if it's inside a directory
-          FILE_PATH="jest.config.json"
+            return comments.data.map(comment => comment.body);
 
-          if [ -f "$FILE_PATH" ]; then
-            echo "Contents of $FILE_PATH:"
-            cat "$FILE_PATH"
-          else
-            echo "$FILE_PATH not found!"
-          fi
+      - name: Output PR Comments
+        run: echo "${{ steps.get_pr_comments.outputs.result }}"
+
+      # - name: Download artifact
+      #   id: download-artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: updated-jest-config
+      #     github-token: ${{ github.token }}
+      # name:: code-coverage.yaml
+      # pr: ${{github.event.pull_request.number}}
 
       # - name: Get user ID of the person who merged the PR
       #   run: |
