@@ -95,8 +95,6 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const github = require('@actions/github');
-            const context = github.context;
             const prNumber = context.issue.number;
             const runId = context.runId;
 
