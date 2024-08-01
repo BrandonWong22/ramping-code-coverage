@@ -37,7 +37,7 @@ jobs:
             echo "Threshold file found"
             threshold=$(jq '.coverageThreshold.global.lines' $thresholdFile)
             echo "Threshold: $threshold"
-            echo "::set-output name=threshold::$threshold"
+            echo "threshold=$threshold" >> $GITHUB_OUTPUT
           else
             echo "Threshold file not found!"
             exit 1
@@ -51,7 +51,7 @@ jobs:
           echo "New Threshold: $new_threshold"
           # Update the jest.config.json file with the new threshold
           jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
-          echo "::set-output name=new_threshold::$new_threshold"
+          echo "new_threshold=$new_threshold" >> $GITHUB_OUTPUT
 
       # - name: Output coverage threshold
       #   run: echo "Current Jest coverage threshold for lines is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}"
