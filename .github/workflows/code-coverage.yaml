@@ -82,6 +82,13 @@ jobs:
 
       - name: Print total coverage and threshold
         run: |
-          echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
-          echo "The line coverage threshold is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
-          echo "The modified line coverage threshold is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}%"
+          echo "The line coverage on the Pull Request is ${{ steps.coverage.outputs.coverage }}%"
+          echo "The line coverage threshold on main is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
+          echo "The required line coverage threshold is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}%"
+
+      - name: Compare pull request coverage with modified requirement
+        run: |
+          pr_coverage = ${{ steps.coverage.outputs.coverage }}
+          required_coverage = ${{ steps.modify-coverage-threshold.outputs.new_threshold }}
+          echo "PR $pr_coverage"
+          echo "Required $required_coverage"
