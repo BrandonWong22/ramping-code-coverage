@@ -2,11 +2,11 @@ import App from './App';
 import { render, screen } from '@testing-library/react';
 import Test from './components/Test';
 
-test('Always true test', () => {
+test.only('Always true test', () => {
   expect(true).toBe.true;
 });
 
-test.skip('Heading should be Vite + React', () => {
+test('Heading should be Vite + React', () => {
   render(<App />);
 
   const headingElement = screen.getByText('Vite + React');

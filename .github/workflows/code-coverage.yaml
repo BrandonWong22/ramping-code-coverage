@@ -1,4 +1,4 @@
-name: CI
+name: Check code coverage
 
 on:
   pull_request:
@@ -69,41 +69,20 @@ jobs:
           echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
           echo "The line coverage threshold is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
 
-      - name: Calculate new threshold
-        id: calculate-new-threshold
-        run: |
-          currentThreshold=${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}
-          newThreshold=$((currentThreshold + 2))
-          echo "New value $newThreshold"
+      # - name: Calculate new threshold
+      #   id: calculate-new-threshold
+      #   run: |
+      #     currentThreshold=${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}
+      #     newThreshold=$((currentThreshold + 2))
+      #     echo "New value $newThreshold"
 
-      - name: Update coverageThreshold if needed
-        if: steps.coverage.outputs.coverage > steps.calculate-new-threshold.outputs.threshold
-        run: |
-          thresholdFile=jest.config.json
-          newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
-          echo "$newThreshold" > $thresholdFile
-          cat $thresholdFile
-
-      - name: Upload updated jest.config.json
-        if: steps.coverage.outputs.coverage > steps.extract-min-code-coverage-from-main.outputs.threshold
-        uses: actions/upload-artifact@v4
-        with:
-          name: updated-jest-config
-          path: jest.config.json
-
-      - name: Add Run ID as PR Comment
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const prNumber = context.issue.number;
-            const runId = context.runId;
-
-            github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber,
-              body: `This GitHub Actions run ID is: ${runId}`
-            });
+      # - name: Update coverageThreshold if needed
+      #   if: steps.coverage.outputs.coverage > steps.calculate-new-threshold.outputs.threshold
+      #   run: |
+      #     thresholdFile=jest.config.json
+      #     newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
+      #     echo "$newThreshold" > $thresholdFile
+      #     cat $thresholdFile
 
   # push-to-main:
   #   runs-on: ubuntu-latest
