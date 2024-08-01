@@ -82,7 +82,7 @@ jobs:
 
       - name: Print total coverage and threshold
         run: |
-          echo "The line coverage on the Pull Request is ${{ steps.coverage.outputs.pullRequestCoverage }}%"
+          echo "The line coverage on the Pull Request is ${{ steps.coverage.outputs.totalCoverage }}%"
           echo "The line coverage threshold on main is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
           echo "The required line coverage threshold is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}%"
 
