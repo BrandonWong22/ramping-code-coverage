@@ -10,10 +10,10 @@ test('Heading should be Vite + React', () => {
   expect(headingElement).toBeInTheDocument();
 });
 
-// test('Header component renders the string Header', () => {
-//   render(<Header />);
+test('Header component renders the string Header', () => {
+  render(<Header />);
 
-//   const headingElement = screen.getByText('Header');
+  const headingElement = screen.getByText('Header');
 
-//   expect(headingElement).toBeInTheDocument();
-// });
+  expect(headingElement).toBeInTheDocument();
+});
