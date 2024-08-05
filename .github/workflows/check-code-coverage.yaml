@@ -4,8 +4,8 @@ on:
   pull_request:
     # branches:
     #   - main
-    # paths:
-    #   - 'frontend/main-ui/**'
+    paths:
+      - 'frontend/main-ui/**'
     #   - 'frontend/customers-page/**'
     #   - 'frontend/competitions-page/**'
   workflow_dispatch:
@@ -17,7 +17,6 @@ env:
 
 jobs:
   check-code-coverage-on-main-ui:
-    if: contains(github.event.pull_request.changed_files, 'frontend/main-ui/')
     runs-on: ubuntu-latest
     steps:
       - name: Check out the code
