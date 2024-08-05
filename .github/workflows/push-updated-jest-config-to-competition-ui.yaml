@@ -1,15 +1,19 @@
-name: Push Updated Jest Config
+name: Push Updated Jest Config to competition ui
 
 on:
   pull_request:
     types:
       - closed
+    paths:
+      - 'frontend/competition-ui/**'
   workflow_dispatch:
 
 jobs:
-  push-updated-coverage-threshold-to-main:
+  push-updated-coverage-threshold-to-competition-ui:
     runs-on: ubuntu-latest
-    # if: github.event.pull_request.merged == true
+    defaults:
+      run:
+        working-directory: frontend/competition-ui
     steps:
       - name: Check out the code
         uses: actions/checkout@v4

@@ -1,0 +1,72 @@
+name: Push Updated Jest Config to main ui
+
+on:
+  pull_request:
+    types:
+      - closed
+    paths:
+      - 'frontend/main-ui/**'
+  workflow_dispatch:
+
+jobs:
+  push-updated-coverage-threshold-to-main-ui:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend/main-ui
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Checkout main branch jest.config.json
+        run: git checkout main -- jest.config.json
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run coverage and print results
+        run: |
+          npm run coverage
+
+      - name: Read and print coverage summary
+        id: coverage
+        run: |
+          coverageFile=coverage/coverage-summary.json
+          if [ -f "$coverageFile" ]; then
+            echo "Coverage file found"
+            cat $coverageFile
+            totalCoverage=$(jq '.total.lines.pct' $coverageFile)
+            echo "Total line coverage: $totalCoverage%"
+            echo "::set-output name=coverage::$totalCoverage"
+          else
+            echo "Coverage file not found!"
+            exit 1
+          fi
+
+      - name: Print total coverage and threshold
+        run: |
+          echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
+
+      - name: Update coverageThreshold if needed
+        # if: steps.coverage.outputs.coverage > steps.calculate-new-threshold.outputs.threshold
+        run: |
+          thresholdFile=jest.config.json
+          newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
+          echo "$newThreshold" > $thresholdFile
+          cat $thresholdFile
+
+      - name: Configure Git
+        run: |
+          git config user.name "BrandonWong22"
+          git config user.email "brandonwong2608@gmail.com"
+
+      - name: Commit and push updated jest.config.json
+        run: |
+          git add .
+          git commit -m "Update jest.config.json with new coverage threshold"
+          git push origin HEAD:main
