@@ -17,6 +17,7 @@ env:
 
 jobs:
   check-code-coverage-on-main-ui:
+    if: contains(github.event.pull_request.changed_files, 'frontend/main-ui/')
     runs-on: ubuntu-latest
     defaults:
       run:
