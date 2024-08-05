@@ -39,6 +39,7 @@ jobs:
       - name: Extract coverage threshold from main branch
         id: extract-min-code-coverage-from-main
         run: |
+          cd frontend/main-ui
           thresholdFile=jest.config.json
           if [ -f "$thresholdFile" ]; then
             echo "Threshold file found"
