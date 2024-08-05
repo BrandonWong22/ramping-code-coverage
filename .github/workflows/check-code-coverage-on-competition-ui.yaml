@@ -1,11 +1,11 @@
-name: Check code coverage on main ui
+name: Check code coverage on competition ui
 
 on:
   pull_request:
     branches:
       - main
     paths:
-      - 'frontend/main-ui/**'
+      - 'frontend/competition-ui/**'
   workflow_dispatch:
 
 env:
@@ -13,11 +13,11 @@ env:
   RAMPING_CODE_COVERAGE_CAP: 90
 
 jobs:
-  check-code-coverage-on-main-ui:
+  check-code-coverage-on-competition-ui:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: frontend/main-ui
+        working-directory: frontend/competition-ui
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
