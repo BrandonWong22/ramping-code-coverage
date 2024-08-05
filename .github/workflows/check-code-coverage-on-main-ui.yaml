@@ -1,9 +1,13 @@
-name: Check code coverage
+name: Check code coverage on main ui
 
 on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'frontend/main-ui/**'
+      # - 'frontend/customers-page/**'
+    #   - 'frontend/competitions-page/**'
   workflow_dispatch:
 
 env:
@@ -11,10 +15,11 @@ env:
   RAMPING_CODE_COVERAGE_CAP: 90
 
 jobs:
-  check-code-coverage:
-    # if: github.event.action != 'closed'
+  check-code-coverage-on-main-ui:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: frontend/main-ui
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
@@ -23,7 +28,9 @@ jobs:
         run: git fetch origin main:main
 
       - name: Checkout main branch jest.config.json
-        run: git checkout main -- jest.config.json
+        run: |
+          git checkout main -- jest.config.json
+          cat jest.config.json
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -64,10 +71,6 @@ jobs:
 
           echo "new_threshold=$new_threshold" >> $GITHUB_OUTPUT
 
-        # # Update the jest.config.json file with the new threshold
-        # jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
-        # echo "new_threshold=$new_threshold" >> $GITHUB_OUTPUT
-
       - name: Output required line coverage
         run: |
           echo "Current Jest coverage threshold for lines is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
@@ -103,14 +106,3 @@ jobs:
           echo "The line coverage on the Pull Request is ${{ steps.pull-request-coverage.outputs.totalCoverage }}%"
           echo "The line coverage threshold on main is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
           echo "The required line coverage threshold is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}%"
-
-      # - name: Check coverage meets threshold
-      #   run: |
-      #     totalCoverage=${{ steps.pull-request-coverage.outputs.totalCoverage }}
-      #     newThreshold=${{ steps.modify-coverage-threshold.outputs.new_threshold }}
-      #     if (( $(echo "$totalCoverage < $newThreshold" | bc -l) )); then
-      #       echo "Total coverage $totalCoverage% is less than the required threshold $newThreshold%"
-      #       exit 1
-      #     else
-      #       echo "Total coverage $totalCoverage% meets or exceeds the required threshold $newThreshold%"
-      #     fi
