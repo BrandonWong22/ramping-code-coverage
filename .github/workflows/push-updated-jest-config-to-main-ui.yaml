@@ -60,10 +60,17 @@ jobs:
           echo "$newThreshold" > $thresholdFile
           cat $thresholdFile
 
+      - name: Get GitHub username and email
+        id: user_info
+        run: |
+          echo "GITHUB_USERNAME=${{ github.actor }}" >> $GITHUB_ENV
+          git_email=$(git log -1 --pretty=format:'%ae')
+          echo "GITHUB_EMAIL=$git_email" >> $GITHUB_ENV
+
       - name: Configure Git
         run: |
-          git config user.name "BrandonWong22"
-          git config user.email "brandonwong2608@gmail.com"
+          git config user.name $GITHUB_USERNAME
+          git config user.email $GITHUB_EMAIL
 
       - name: Commit and push updated jest.config.json
         run: |
