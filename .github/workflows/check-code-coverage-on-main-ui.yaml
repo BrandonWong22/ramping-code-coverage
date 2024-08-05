@@ -2,8 +2,8 @@ name: Check code coverage
 
 on:
   pull_request:
-    # branches:
-    #   - main
+    branches:
+      - main
     paths:
       - 'frontend/main-ui/**'
       # - 'frontend/customers-page/**'
@@ -13,11 +13,9 @@ on:
 env:
   CODE_COVERAGE_MODIFIER: 2
   RAMPING_CODE_COVERAGE_CAP: 90
-  MAIN_UI_PATH: frontend/main-ui/
 
 jobs:
   check-code-coverage-on-main-ui:
-    if: contains(github.event.pull_request.changed_files, 'frontend/main-ui/**')
     runs-on: ubuntu-latest
     defaults:
       run:
