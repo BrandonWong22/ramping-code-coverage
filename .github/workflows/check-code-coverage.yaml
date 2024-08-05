@@ -66,6 +66,7 @@ jobs:
           temp_file=jest.config.tmp
 
           # Update the jest.config.json file with the new threshold
+          cd frontend/main-ui
           jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > $temp_file
           mv $temp_file jest.config.json
 
