@@ -6,7 +6,7 @@ on:
     #   - main
     paths:
       - 'frontend/main-ui/**'
-    #   - 'frontend/customers-page/**'
+      - 'frontend/customers-page/**'
     #   - 'frontend/competitions-page/**'
   workflow_dispatch:
 
