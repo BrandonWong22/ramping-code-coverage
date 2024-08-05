@@ -18,6 +18,9 @@ env:
 jobs:
   check-code-coverage-on-main-ui:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend/main-ui
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
@@ -27,7 +30,6 @@ jobs:
 
       - name: Checkout main branch jest.config.json
         run: |
-          cd frontend/main-ui
           git checkout main -- jest.config.json
           cat jest.config.json
 
@@ -39,7 +41,6 @@ jobs:
       - name: Extract coverage threshold from main branch
         id: extract-min-code-coverage-from-main
         run: |
-          cd frontend/main-ui
           thresholdFile=jest.config.json
           if [ -f "$thresholdFile" ]; then
             echo "Threshold file found"
@@ -66,7 +67,6 @@ jobs:
           temp_file=jest.config.tmp
 
           # Update the jest.config.json file with the new threshold
-          cd frontend/main-ui
           jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > $temp_file
           mv $temp_file jest.config.json
 
