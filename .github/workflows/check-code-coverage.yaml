@@ -26,13 +26,13 @@ jobs:
       - name: Fetch main branch
         run: git fetch origin main:main
 
-      - name: Checkout main branch jest.config.json
-        run: git checkout main -- jest.config.json
+      # - name: Checkout main branch jest.config.json
+      #   run: git checkout main -- jest.config.json
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: '18'
 
       # - name: Extract coverage threshold from main branch
       #   id: extract-min-code-coverage-from-main
