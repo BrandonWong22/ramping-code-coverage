@@ -5,9 +5,7 @@ on:
     branches:
       - main
     paths:
-      #   - 'frontend/main-ui/**'
-      - 'frontend/customers-page/**'
-    #   - 'frontend/competitions-page/**'
+      - 'frontend/customers-ui/**'
   workflow_dispatch:
 
 env:
