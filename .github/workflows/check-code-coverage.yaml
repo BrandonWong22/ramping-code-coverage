@@ -4,10 +4,10 @@ on:
   pull_request:
     # branches:
     #   - main
-    paths:
-      - 'frontend/main-ui/**'
-      - 'frontend/customers-page/**'
-      - 'frontend/competitions-page/**'
+    # paths:
+    #   - 'frontend/main-ui/**'
+    #   - 'frontend/customers-page/**'
+    #   - 'frontend/competitions-page/**'
   workflow_dispatch:
 
 env:
