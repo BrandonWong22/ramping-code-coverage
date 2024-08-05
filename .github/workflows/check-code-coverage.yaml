@@ -36,19 +36,19 @@ jobs:
         with:
           node-version: '18'
 
-      # - name: Extract coverage threshold from main branch
-      #   id: extract-min-code-coverage-from-main
-      #   run: |
-      #     thresholdFile=jest.config.json
-      #     if [ -f "$thresholdFile" ]; then
-      #       echo "Threshold file found"
-      #       threshold=$(jq '.coverageThreshold.global.lines' $thresholdFile)
-      #       echo "Threshold: $threshold"
-      #       echo "threshold=$threshold" >> $GITHUB_OUTPUT
-      #     else
-      #       echo "Threshold file not found"
-      #       exit 1
-      #     fi
+      - name: Extract coverage threshold from main branch
+        id: extract-min-code-coverage-from-main
+        run: |
+          thresholdFile=jest.config.json
+          if [ -f "$thresholdFile" ]; then
+            echo "Threshold file found"
+            threshold=$(jq '.coverageThreshold.global.lines' $thresholdFile)
+            echo "Threshold: $threshold"
+            echo "threshold=$threshold" >> $GITHUB_OUTPUT
+          else
+            echo "Threshold file not found"
+            exit 1
+          fi
 
       # - name: Modify coverage threshold
       #   id: modify-coverage-threshold
