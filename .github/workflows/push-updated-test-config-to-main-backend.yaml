@@ -1,4 +1,4 @@
-name: Push Updated Jest Config to main ui
+name: Push Updated Test Config to main backend
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  push-updated-coverage-threshold-to-main-ui:
+  push-updated-coverage-threshold-to-main-backend:
     uses: ./.github/workflows/update-backend-code-coverage.yaml
     with:
       backend-working-directory: "backend/main-backend"
