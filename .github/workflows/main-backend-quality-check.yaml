@@ -13,4 +13,4 @@ jobs:
   check-code-coverage-on-main-ui:
     uses: ./.github/workflows/backend-code-coverage-check.yaml
     with:
-      backend-working-directory: "frontend/main-ui"
+      backend-working-directory: "backend/main-backend"
