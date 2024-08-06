@@ -13,7 +13,7 @@ env:
   RAMPING_CODE_COVERAGE_CAP: 90
 
 jobs:
-  check-code-coverage-on-main-ui:
+  check-code-coverage-on-main-backend:
     runs-on: ubuntu-latest
     defaults:
       run:
