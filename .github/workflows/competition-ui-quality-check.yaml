@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-code-coverage-on-competition-ui:
+  check-npm-quality-on-competition-ui:
     uses: ./.github/workflows/npm-quality-check.yaml
     with:
       ui-working-directory: 'frontend/competition-ui'
