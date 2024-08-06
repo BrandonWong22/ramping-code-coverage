@@ -109,7 +109,11 @@ jobs:
             mainBranchCoverage=$(jq '.coverageThreshold.global.functions' $thresholdFile)
             mainFunctionCoverage=$(jq '.coverageThreshold.global.branches' $thresholdFile)
 
-            requiredLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
+            if [ $requiredLineCoverage -gt $RAMPING_CODE_COVERAGE_CAP ]; then
+              requiredLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+            else
+              requiredLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
+
             requiredStatementCoverage=$(($mainStatementCoverage + CODE_COVERAGE_MODIFIER))
             requiredBranchCoverage=$(($mainBranchCoverage + CODE_COVERAGE_MODIFIER))
             requiredFunctionCoverage=$(($mainFunctionCoverage + CODE_COVERAGE_MODIFIER))
