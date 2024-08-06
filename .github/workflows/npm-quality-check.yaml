@@ -1,4 +1,4 @@
-name: Check UI code coverage
+name: Check NPM Quality
 
 on:
   workflow_call:
@@ -13,7 +13,7 @@ env:
   RAMPING_CODE_COVERAGE_CAP: 70 # need to update this after testing
 
 jobs:
-  check-code-coverage-on-ui:
+  check-npm-quality-on-ui:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -109,10 +109,29 @@ jobs:
             mainBranchCoverage=$(jq '.coverageThreshold.global.functions' $thresholdFile)
             mainFunctionCoverage=$(jq '.coverageThreshold.global.branches' $thresholdFile)
 
-            requiredLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
-            requiredStatementCoverage=$(($mainStatementCoverage + CODE_COVERAGE_MODIFIER))
-            requiredBranchCoverage=$(($mainBranchCoverage + CODE_COVERAGE_MODIFIER))
-            requiredFunctionCoverage=$(($mainFunctionCoverage + CODE_COVERAGE_MODIFIER))
+            if [ $mainLineCoverage -ge $RAMPING_CODE_COVERAGE_CAP ]; then
+              requiredLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+            else
+              requiredLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
+            fi
+
+            if [ $mainStatementCoverage -ge $RAMPING_CODE_COVERAGE_CAP ]; then
+              requiredStatementCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+            else
+              requiredStatementCoverage=$(($mainStatementCoverage + CODE_COVERAGE_MODIFIER))
+            fi
+
+            if [ $mainBranchCoverage -ge $RAMPING_CODE_COVERAGE_CAP ]; then
+              requiredBranchCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+            else
+              requiredBranchCoverage=$(($mainBranchCoverage + CODE_COVERAGE_MODIFIER))
+            fi
+
+            if [ $mainFunctionCoverage -ge $RAMPING_CODE_COVERAGE_CAP ]; then
+              requiredFunctionCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+            else
+             requiredFunctionCoverage=$(($mainFunctionCoverage + CODE_COVERAGE_MODIFIER))
+            fi
 
             echo "Total line coverage: $mainLineCoverage%"
             echo "Total statement coverage: $mainStatementCoverage%"
