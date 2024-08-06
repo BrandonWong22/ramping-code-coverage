@@ -115,9 +115,23 @@ jobs:
               requiredLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
             fi
 
-            requiredStatementCoverage=$(($mainStatementCoverage + CODE_COVERAGE_MODIFIER))
-            requiredBranchCoverage=$(($mainBranchCoverage + CODE_COVERAGE_MODIFIER))
-            requiredFunctionCoverage=$(($mainFunctionCoverage + CODE_COVERAGE_MODIFIER))
+            if [ $mainStatementCoverage -ge $RAMPING_CODE_COVERAGE_CAP ]; then
+              requiredStatementCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+            else
+              requiredStatementCoverage=$(($mainStatementCoverage + CODE_COVERAGE_MODIFIER))
+            fi
+
+            if [ $mainBranchCoverage -ge $RAMPING_CODE_COVERAGE_CAP ]; then
+              requiredBranchCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+            else
+              requiredBranchCoverage=$(($mainBranchCoverage + CODE_COVERAGE_MODIFIER))
+            fi
+
+            if [ $mainFunctionCoverage -ge $RAMPING_CODE_COVERAGE_CAP ]; then
+              requiredFunctionCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+            else
+             requiredFunctionCoverage=$(($mainFunctionCoverage + CODE_COVERAGE_MODIFIER))
+            fi
 
             echo "Total line coverage: $mainLineCoverage%"
             echo "Total statement coverage: $mainStatementCoverage%"
