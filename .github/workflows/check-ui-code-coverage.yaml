@@ -61,6 +61,7 @@ jobs:
           fi
 
       - name: Check if PR coverage exceeds RAMPING_CODE_COVERAGE_CAP
+        id: check-if-coverage-exceeds-cap
         run: |
           lineCoverage=${{ steps.pull-request-coverage.outputs.lineCoverage }}
           statementCoverage=${{ steps.pull-request-coverage.outputs.statementCoverage }}
@@ -78,13 +79,15 @@ jobs:
             exit 1
           fi
 
-      # - name: Fetch main branch
-      #   run: git fetch origin main:main
+      - name: Fetch main branch
+        if: steps.check-if-coverage-exceeds-cap.outcome == 'success'
+        run: git fetch origin main:main
 
-      # - name: Checkout main branch jest.config.json
-      #   run: |
-      #     git checkout main -- jest.config.json
-      #     cat jest.config.json
+      - name: Checkout main branch jest.config.json
+        if: steps.check-if-coverage-exceeds-cap.outcome == 'success'
+        run: |
+          git checkout main -- jest.config.json
+          cat jest.config.json
 
       # - name: Extract coverage threshold from main branch
       #   id: extract-min-code-coverage-from-main
