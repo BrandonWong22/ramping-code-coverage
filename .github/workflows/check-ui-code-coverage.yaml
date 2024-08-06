@@ -42,7 +42,7 @@ jobs:
             echo "Coverage file found"
             cat $coverageFile
             lineCoverage=$(jq '.total.lines.pct' $coverageFile)
-            statementCoverage=$(jq '.total.stmts.pct' $coverageFile)
+            statementCoverage=$(jq '.total.statements.pct' $coverageFile)
             echo "Total line coverage: $lineCoverage%"
             echo "Total statement coverage: $statementCoverage"
             echo "lineCoverage=$lineCoverage" >> $GITHUB_OUTPUT
