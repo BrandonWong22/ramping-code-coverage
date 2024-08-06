@@ -13,7 +13,7 @@ env:
   RAMPING_CODE_COVERAGE_CAP: 70 # need to update this after testing
 
 jobs:
-  check-code-coverage-on-competition-ui:
+  check-code-coverage-on-ui:
     runs-on: ubuntu-latest
     defaults:
       run:

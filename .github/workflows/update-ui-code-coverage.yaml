@@ -13,7 +13,7 @@ env:
   RAMPING_CODE_COVERAGE_CAP: 90
 
 jobs:
-  push-updated-coverage-threshold-to-competition-ui:
+  push-updated-coverage-threshold-to-ui:
     runs-on: ubuntu-latest
     defaults:
       run:
