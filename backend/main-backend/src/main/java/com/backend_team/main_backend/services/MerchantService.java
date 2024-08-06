@@ -17,7 +17,4 @@ public class MerchantService {
     public boolean validateMerchant(int merchantId) {
         return merchantId == 324;
     }
-    public boolean validateMerchantAgain(int merchantId) {
-        return merchantId == 23423;
-    }
 }
