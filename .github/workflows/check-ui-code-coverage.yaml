@@ -99,7 +99,7 @@ jobs:
           thresholdFile=jest.config.json
           if [ -f "$thresholdFile" ]; then
             echo "Threshold file found"
-            mainLineCoverage=$(jq '.total.lines.pct' $thresholdFile)
+            mainLineCoverage=$(jq '.coverageThreshold.global.lines' $thresholdFile)
             mainStatementCoverage=$(jq '.total.statements.pct' $thresholdFile)
             mainBranchCoverage=$(jq '.total.branches.pct' $thresholdFile)
             mainFunctionCoverage=$(jq '.total.functions.pct' $thresholdFile)
