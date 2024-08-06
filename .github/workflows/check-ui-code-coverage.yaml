@@ -41,13 +41,19 @@ jobs:
           if [ -f "$coverageFile" ]; then
             echo "Coverage file found"
             cat $coverageFile
-            totalCoverage=$(jq '.total.lines.pct' $coverageFile)
-            echo "Total line coverage: $totalCoverage%"
-            echo "totalCoverage=$totalCoverage" >> $GITHUB_OUTPUT
+            lineCoverage=$(jq '.total.lines.pct' $coverageFile)
+            statementCoverage=$(jq '.total.stmts.pct' $coverageFile)
+            echo "Total line coverage: $lineCoverage%"
+            echo "Total statement coverage: $statementCoverage"
+            echo "lineCoverage=$lineCoverage" >> $GITHUB_OUTPUT
+            echo "statementCoverage=$statementCoverage" >> $GITHUB_OUTPUT
           else
             echo "Coverage file not found!"
             exit 1
           fi
+
+      # - name: Check if PR coverage exceeds RAMPING_CODE_COVERAGE_CAP
+      #   run: |
 
       # - name: Fetch main branch
       #   run: git fetch origin main:main
