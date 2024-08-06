@@ -104,7 +104,7 @@ jobs:
       - name: Checkout main branch test.config.json
         if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
         run: |
-          git checkout main-backend -- test.config.json
+          git checkout main-danny -- test.config.json
           cat test.config.json
 
       - name: Extract coverage threshold from main branch
