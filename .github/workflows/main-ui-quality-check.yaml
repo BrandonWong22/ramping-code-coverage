@@ -1,4 +1,4 @@
-name: Check code coverage on main ui
+name: Check quality on main ui
 
 on:
   pull_request:
