@@ -38,7 +38,26 @@ jobs:
         run: mvn jacoco:report
 
       - name: Check Coverage
-        run: bash ./backend/main-backend/check_coverage.sh
+        run: |
+          # Path to the Jacoco report
+          report_path="target/site/jacoco/jacoco.xml"
+
+          # Extract the line coverage percentage
+          line_coverage=$(xmllint --xpath "string(//report/counter[@type='LINE']/@covered)" $report_path)
+          total_lines=$(xmllint --xpath "string(//report/counter[@type='LINE']/@missed)" $report_path)
+          total_lines=$((line_coverage + total_lines))
+          coverage_percentage=$((line_coverage * 100 / total_lines))
+
+          echo "Line Coverage: $coverage_percentage%"
+
+          # Check if coverage is at least 70%
+          if [ $coverage_percentage -lt 70 ]; then
+            echo "Code coverage is below 70%"
+            exit 1
+          else
+            echo "Code coverage is above 70%"
+            exit 0
+          fi
 
       - name: Upload coverage report
         if: success()
