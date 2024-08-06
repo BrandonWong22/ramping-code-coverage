@@ -43,10 +43,18 @@ jobs:
             cat $coverageFile
             lineCoverage=$(jq '.total.lines.pct' $coverageFile)
             statementCoverage=$(jq '.total.statements.pct' $coverageFile)
+            branchCoverage=$(jq '.total.branches.pct' $coverageFile)
+            functionCoverage=$(jq '.total.function.pct' $coverageFile)
+
             echo "Total line coverage: $lineCoverage%"
             echo "Total statement coverage: $statementCoverage"
+            echo "Total branch coverage: $branchCoverage"
+            echo "Total function coverage: $functionCoverage"
+
             echo "lineCoverage=$lineCoverage" >> $GITHUB_OUTPUT
             echo "statementCoverage=$statementCoverage" >> $GITHUB_OUTPUT
+            echo "branchCoverage=$branchCoverage" >> $GITHUB_OUTPUT
+            echo "functionCoverage=$functionCoverage" >> $GITHUB_OUTPUT
           else
             echo "Coverage file not found!"
             exit 1
