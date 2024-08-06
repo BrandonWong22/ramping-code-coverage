@@ -113,6 +113,7 @@ jobs:
               requiredLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
             else
               requiredLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
+            fi
 
             requiredStatementCoverage=$(($mainStatementCoverage + CODE_COVERAGE_MODIFIER))
             requiredBranchCoverage=$(($mainBranchCoverage + CODE_COVERAGE_MODIFIER))
