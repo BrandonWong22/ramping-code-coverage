@@ -1,0 +1,84 @@
+name: Update UI code coverage
+
+on:
+  workflow_call:
+    inputs:
+      ui-working-directory:
+        description: 'The path of the frontend'
+        required: true
+        type: string
+
+env:
+  CODE_COVERAGE_MODIFIER: 2
+  RAMPING_CODE_COVERAGE_CAP: 90
+
+jobs:
+  push-updated-coverage-threshold-to-ui:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.ui-working-directory }}
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Checkout main branch jest.config.json
+        run: git checkout main -- jest.config.json
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run coverage and print results
+        run: |
+          npm run coverage
+
+      - name: Read and print coverage summary
+        id: coverage
+        run: |
+          coverageFile=coverage/coverage-summary.json
+          if [ -f "$coverageFile" ]; then
+            echo "Coverage file found"
+            cat $coverageFile
+            totalCoverage=$(jq '.total.lines.pct' $coverageFile)
+            echo "Total line coverage: $totalCoverage%"
+            echo "::set-output name=coverage::$totalCoverage"
+          else
+            echo "Coverage file not found!"
+            exit 1
+          fi
+
+      - name: Print total coverage and threshold
+        run: |
+          echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
+
+      - name: Update coverageThreshold if needed
+        # if: steps.coverage.outputs.coverage > steps.calculate-new-threshold.outputs.threshold
+        run: |
+          thresholdFile=jest.config.json
+          newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
+          echo "$newThreshold" > $thresholdFile
+          cat $thresholdFile
+
+      - name: Get GitHub username and email
+        id: user_info
+        run: |
+          echo "GITHUB_USERNAME=${{ github.actor }}" >> $GITHUB_ENV
+          git_email=$(git log -1 --pretty=format:'%ae')
+          echo "GITHUB_EMAIL=$git_email" >> $GITHUB_ENV
+
+      - name: Configure Git
+        run: |
+          git config user.name $GITHUB_USERNAME
+          git config user.email $GITHUB_EMAIL
+
+      - name: Commit and push updated jest.config.json
+        run: |
+          git pull
+          git add .
+          git commit -m "Update jest.config.json with new coverage threshold"
+          git push origin HEAD:main
