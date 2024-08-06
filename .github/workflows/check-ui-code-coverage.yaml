@@ -10,7 +10,7 @@ on:
 
 env:
   CODE_COVERAGE_MODIFIER: 2
-  RAMPING_CODE_COVERAGE_CAP: 50 # need to update this after testing
+  RAMPING_CODE_COVERAGE_CAP: 70 # need to update this after testing
 
 jobs:
   check-code-coverage-on-competition-ui:
