@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-code-coverage-on-main-ui:
+  check-code-coverage-on-main-backend:
     uses: ./.github/workflows/backend-code-coverage-check.yaml
     with:
       backend-working-directory: "backend/main-backend"
