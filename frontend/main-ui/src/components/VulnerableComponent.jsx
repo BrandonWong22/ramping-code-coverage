@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+var test = 123;
+
 const VulnerableComponent = () => {
   const [userId, setUserId] = useState('');
 
