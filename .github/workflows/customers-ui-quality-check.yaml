@@ -1,4 +1,4 @@
-name: Check code coverage on customers ui
+name: Check quality on customers ui
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-code-coverage-on-customers-ui:
+  check-npm-quality-on-customers-ui:
     uses: ./.github/workflows/npm-quality-check.yaml
     with:
       ui-working-directory: 'frontend/customers-ui'

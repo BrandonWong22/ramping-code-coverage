@@ -6,6 +6,10 @@ import './App.css';
 function App() {
   const [count, setCount] = useState(0);
 
+  function signIn(username, password) {
+    return `username: ${username}, password: ${password}`;
+  }
+
   return (
     <>
       <div>
@@ -18,6 +22,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <h2>Customers Page!!</h2>
+      <div>{signIn('user', 123)}</div>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
