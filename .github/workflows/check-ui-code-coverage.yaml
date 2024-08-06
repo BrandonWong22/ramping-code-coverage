@@ -134,6 +134,30 @@ jobs:
             exit 1
           fi
 
+      - name: Check if PR coverage exceeds required coverage
+        if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
+        run: |
+          lineCoverage=${{ steps.pull-request-coverage.outputs.lineCoverage }}
+          statementCoverage=${{ steps.pull-request-coverage.outputs.statementCoverage }}
+          branchCoverage=${{ steps.pull-request-coverage.outputs.branchCoverage }}
+          functionCoverage=${{ steps.pull-request-coverage.outputs.functionCoverage }}
+
+          requiredLineCoverage=${{ steps.extract-min-code-coverage-from-main.outputs.requiredLineCoverage }}
+          requiredStatementCoverage=${{ steps.extract-min-code-coverage-from-main.outputs.requiredStatementCoverage }}
+          requiredBranchCoverage=${{ steps.extract-min-code-coverage-from-main.outputs.requiredBranchCoverage }}
+          requiredFunctionCoverage=${{ steps.extract-min-code-coverage-from-main.outputs.requiredFunctionCoverage }}
+
+          if (( $(echo "$lineCoverage >= $requiredLineCoverage" | bc -l) )) &&
+            (( $(echo "$statementCoverage >= $requiredStatementCoverage" | bc -l) )) &&
+            (( $(echo "$branchCoverage >= $requiredBranchCoverage" | bc -l) )) &&
+            (( $(echo "$functionCoverage >= $requiredFunctionCoverage" | bc -l) )); then
+            exceedsCap=true
+            echo "PR coverage exceeds the required coverage."
+          else
+            echo "PR coverage does not exceed the required coverage."
+            exit 1
+          fi
+
       # - name: Modify coverage threshold
       #   id: modify-coverage-threshold
       #   run: |
