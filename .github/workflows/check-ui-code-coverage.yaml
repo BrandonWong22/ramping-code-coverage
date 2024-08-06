@@ -105,7 +105,7 @@ jobs:
             mainBranchCoverage=$(jq '.coverageThreshold.global.functions' $thresholdFile)
             mainFunctionCoverage=$(jq '.coverageThreshold.global.branches' $thresholdFile)
 
-            requiredMainLineCoverage=$mainLineCoverage + CODE_COVERAGE_MODIFIER
+            requiredMainLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
 
             echo "Total line coverage: $mainLineCoverage%"
             echo "Total statement coverage: $mainStatementCoverage%"
