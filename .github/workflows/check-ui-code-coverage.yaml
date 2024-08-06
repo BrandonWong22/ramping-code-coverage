@@ -10,7 +10,7 @@ on:
 
 env:
   CODE_COVERAGE_MODIFIER: 2
-  RAMPING_CODE_COVERAGE_CAP: 90
+  RAMPING_CODE_COVERAGE_CAP: 40
 
 jobs:
   check-code-coverage-on-competition-ui:
@@ -44,7 +44,7 @@ jobs:
             lineCoverage=$(jq '.total.lines.pct' $coverageFile)
             statementCoverage=$(jq '.total.statements.pct' $coverageFile)
             branchCoverage=$(jq '.total.branches.pct' $coverageFile)
-            functionCoverage=$(jq '.total.function.pct' $coverageFile)
+            functionCoverage=$(jq '.total.functions.pct' $coverageFile)
 
             echo "Total line coverage: $lineCoverage%"
             echo "Total statement coverage: $statementCoverage"
@@ -60,8 +60,23 @@ jobs:
             exit 1
           fi
 
-      # - name: Check if PR coverage exceeds RAMPING_CODE_COVERAGE_CAP
-      #   run: |
+      - name: Check if PR coverage exceeds RAMPING_CODE_COVERAGE_CAP
+        run: |
+          lineCoverage=${{ steps.pull-request-coverage.outputs.lineCoverage }}
+          statementCoverage=${{ steps.pull-request-coverage.outputs.statementCoverage }}
+          branchCoverage=${{ steps.pull-request-coverage.outputs.branchCoverage }}
+          functionCoverage=${{ steps.pull-request-coverage.outputs.functionCoverage }}
+          RAMPING_CODE_COVERAGE_CAP=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+
+          if (( $(echo "$lineCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) ||
+            (( $(echo "$statementCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) ||
+            (( $(echo "$branchCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) ||
+            (( $(echo "$functionCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
+            echo "Coverage exceeds the cap."
+          else
+            echo "Coverage does not exceed the cap."
+            exit 1
+          fi
 
       # - name: Fetch main branch
       #   run: git fetch origin main:main
