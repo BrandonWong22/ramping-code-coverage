@@ -30,6 +30,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Run npm audit
+        run: |
+          npm audit --audit-level=high
+
       - name: Run coverage and print results
         run: |
           npm run coverage

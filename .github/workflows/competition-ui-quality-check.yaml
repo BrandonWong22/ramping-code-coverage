@@ -9,12 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-audit:
-    uses: ./.github/workflows/run-npm-audit.yaml
-    with:
-      ui-working-directory: 'frontend/competition-ui'
-
   check-code-coverage-on-competition-ui:
-    uses: ./.github/workflows/check-ui-code-coverage.yaml
+    uses: ./.github/workflows/npm-quality-check.yaml
     with:
       ui-working-directory: 'frontend/competition-ui'

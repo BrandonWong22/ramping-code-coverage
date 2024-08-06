@@ -10,6 +10,6 @@ on:
 
 jobs:
   check-code-coverage-on-customers-ui:
-    uses: ./.github/workflows/check-ui-code-coverage.yaml
+    uses: ./.github/workflows/npm-quality-check.yaml
     with:
       ui-working-directory: 'frontend/customers-ui'
