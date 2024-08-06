@@ -2,8 +2,8 @@ name: Check code coverage on customers ui
 
 on:
   pull_request:
-    branches:
-      - main
+    # branches:
+    #   - main
     paths:
       - 'frontend/customers-ui/**'
   workflow_dispatch:

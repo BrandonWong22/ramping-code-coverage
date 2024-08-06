@@ -2,8 +2,8 @@ name: Check code coverage on competition ui
 
 on:
   pull_request:
-    branches:
-      - main
+    # branches:
+    #   - main
     paths:
       - 'frontend/competition-ui/**'
   workflow_dispatch:
