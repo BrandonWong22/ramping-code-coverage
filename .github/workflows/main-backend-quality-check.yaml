@@ -3,7 +3,7 @@ name: Check code quality on main-backend
 on:
   pull_request:
     branches:
-      - main-danny
+      - main
 
     paths:
       - "backend/main-backend/**"

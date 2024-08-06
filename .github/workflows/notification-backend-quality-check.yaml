@@ -3,7 +3,7 @@ name: Check code quality on notification-backend
 on:
   pull_request:
     branches:
-      - main-danny
+      - main
 
     paths:
       - "backend/notification-backend/**"

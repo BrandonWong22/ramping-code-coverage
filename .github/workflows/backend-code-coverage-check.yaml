@@ -99,12 +99,12 @@ jobs:
 
       - name: Fetch main branch
         if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
-        run: git fetch origin main-danny
+        run: git fetch origin main:main
 
       - name: Checkout main branch test.config.json
         if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
         run: |
-          git checkout main-danny
+          git checkout main -- test.config.json
           cat test.config.json
 
       - name: Extract coverage threshold from main branch
