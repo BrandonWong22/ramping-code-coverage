@@ -94,25 +94,32 @@ jobs:
           cat jest.config.json
 
       - name: Extract coverage threshold from main branch
+        if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
         id: extract-min-code-coverage-from-main
         run: |
           thresholdFile=jest.config.json
           if [ -f "$thresholdFile" ]; then
             echo "Threshold file found"
             mainLineCoverage=$(jq '.coverageThreshold.global.lines' $thresholdFile)
-            mainStatementCoverage=$(jq '.total.statements.pct' $thresholdFile)
-            mainBranchCoverage=$(jq '.total.branches.pct' $thresholdFile)
-            mainFunctionCoverage=$(jq '.total.functions.pct' $thresholdFile)
+            mainStatementCoverage=$(jq '.coverageThreshold.global.statements' $thresholdFile)
+            mainBranchCoverage=$(jq '.coverageThreshold.global.functions' $thresholdFile)
+            mainFunctionCoverage=$(jq '.coverageThreshold.global.branches' $thresholdFile)
+
+            requiredMainLineCoverage=$mainLineCoverage+CODE_COVERAGE_MODIFIER
 
             echo "Total line coverage: $mainLineCoverage%"
-            echo "Total statement coverage: $mainStatementCoverage"
-            echo "Total branch coverage: $mainBranchCoverage"
-            echo "Total function coverage: $mainFunctionCoverage"
+            echo "Total statement coverage: $mainStatementCoverage%"
+            echo "Total branch coverage: $mainBranchCoverage%"
+            echo "Total function coverage: $mainFunctionCoverage%"
+
+            echo "Required line coverage: $requiredMainLineCoverage%"
 
             echo "mainLineCoverage=$mainLineCoverage" >> $GITHUB_OUTPUT
             echo "mainLineCoverage=$mainLineCoverage" >> $GITHUB_OUTPUT
             echo "mainLineCoverage=$mainLineCoverage" >> $GITHUB_OUTPUT
             echo "mainLineCoverage=$mainLineCoverage" >> $GITHUB_OUTPUT
+
+            echo "requiredMainLineCoverage=$requiredMainLineCoverage" >> $GITHUB_OUTPUT
           else
             echo "Threshold file not found"
             exit 1
