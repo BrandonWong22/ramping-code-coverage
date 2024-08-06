@@ -151,7 +151,6 @@ jobs:
             (( $(echo "$statementCoverage >= $requiredStatementCoverage" | bc -l) )) &&
             (( $(echo "$branchCoverage >= $requiredBranchCoverage" | bc -l) )) &&
             (( $(echo "$functionCoverage >= $requiredFunctionCoverage" | bc -l) )); then
-            exceedsCap=true
             echo "PR coverage exceeds the required coverage."
           else
             echo "PR coverage does not exceed the required coverage."
