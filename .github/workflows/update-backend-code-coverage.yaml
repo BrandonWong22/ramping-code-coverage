@@ -79,11 +79,14 @@ jobs:
           echo "The total instruction coverage is ${{ steps.coverage.outputs.instruction_coverage }}%"
 
       - name: Update coverageThreshold if needed
-        # if: steps.coverage.outputs.coverage > steps.calculate-new-threshold.outputs.threshold
         run: |
-          thresholdFile=jest.config.json
-          newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
-          echo "$newThreshold" > $thresholdFile
+          thresholdFile=test.config.json
+          newLineThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.line_coverage }}" $thresholdFile)
+          newBranchThreshold=$(jq '.coverageThreshold.global.branches = $newVal' --argjson newVal "${{ steps.coverage.outputs.branch_coverage }}" $thresholdFile)
+          newInstructionThreshold=$(jq '.coverageThreshold.global.instructions = $newVal' --argjson newVal "${{ steps.coverage.outputs.instruction_coverage }}" $thresholdFile)
+          echo "$newLineThreshold" > $thresholdFile
+          echo "$newBranchThreshold" > $thresholdFile
+          echo "$newInstructionThreshold" > $thresholdFile
           cat $thresholdFile
 
       - name: Get GitHub username and email
@@ -98,9 +101,9 @@ jobs:
           git config user.name $GITHUB_USERNAME
           git config user.email $GITHUB_EMAIL
 
-      - name: Commit and push updated jest.config.json
+      - name: Commit and push updated test.config.json
         run: |
           git pull
           git add .
-          git commit -m "Update jest.config.json with new coverage threshold"
+          git commit -m "Update test.config.json with new coverage threshold"
           git push origin HEAD:main
