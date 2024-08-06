@@ -68,9 +68,9 @@ jobs:
           functionCoverage=${{ steps.pull-request-coverage.outputs.functionCoverage }}
           RAMPING_CODE_COVERAGE_CAP=${{ env.RAMPING_CODE_COVERAGE_CAP }}
 
-          if (( $(echo "$lineCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) ||
-            (( $(echo "$statementCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) ||
-            (( $(echo "$branchCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) ||
+          if (( $(echo "$lineCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) &&
+            (( $(echo "$statementCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) &&
+            (( $(echo "$branchCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) &&
             (( $(echo "$functionCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
             echo "Coverage exceeds the cap."
           else
