@@ -105,21 +105,30 @@ jobs:
             mainBranchCoverage=$(jq '.coverageThreshold.global.functions' $thresholdFile)
             mainFunctionCoverage=$(jq '.coverageThreshold.global.branches' $thresholdFile)
 
-            requiredMainLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
+            requiredLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
+            requiredStatementCoverage=$(($mainStatementCoverage + CODE_COVERAGE_MODIFIER))
+            requiredBranchCoverage=$(($mainBranchCoverage + CODE_COVERAGE_MODIFIER))
+            requiredFunctionCoverage=$(($mainFunctionCoverage + CODE_COVERAGE_MODIFIER))
 
             echo "Total line coverage: $mainLineCoverage%"
             echo "Total statement coverage: $mainStatementCoverage%"
             echo "Total branch coverage: $mainBranchCoverage%"
             echo "Total function coverage: $mainFunctionCoverage%"
 
-            echo "Required line coverage: $requiredMainLineCoverage%"
+            echo "Required line coverage: $requiredLineCoverage%"
+            echo "Required statement coverage: $requiredStatementCoverage%"
+            echo "Required branch coverage: $requiredBranchCoverage%"
+            echo "Required function coverage: $requiredFunctionCoverage%"
 
             echo "mainLineCoverage=$mainLineCoverage" >> $GITHUB_OUTPUT
             echo "mainLineCoverage=$mainLineCoverage" >> $GITHUB_OUTPUT
             echo "mainLineCoverage=$mainLineCoverage" >> $GITHUB_OUTPUT
             echo "mainLineCoverage=$mainLineCoverage" >> $GITHUB_OUTPUT
 
-            echo "requiredMainLineCoverage=$requiredMainLineCoverage" >> $GITHUB_OUTPUT
+            echo "requiredLineCoverage=$requiredLineCoverage" >> $GITHUB_OUTPUT
+            echo "requiredStatementCoverage=$requiredStatementCoverage" >> $GITHUB_OUTPUT
+            echo "requiredBranchCoverage=$requiredBranchCoverage" >> $GITHUB_OUTPUT
+            echo "requiredFunctionCoverage=$requiredFunctionCoverage" >> $GITHUB_OUTPUT
           else
             echo "Threshold file not found"
             exit 1
