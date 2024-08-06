@@ -10,6 +10,6 @@ on:
 
 jobs:
   check-code-coverage-on-competition-ui:
-    uses: ./.github/workflows/reusable-workflows/check-ui-code-coverage.yaml
+    uses: ./.github/workflows/check-ui-code-coverage.yaml
     with:
       ui-working-directory: 'frontend/competition-ui'
