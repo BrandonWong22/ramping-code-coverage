@@ -31,45 +31,6 @@ jobs:
       - name: Install xmllint
         run: sudo apt-get install -y libxml2-utils
 
-      - name: Extract coverage threshold from main branch
-        id: extract-min-code-coverage-from-main
-        run: |
-          thresholdFile=test.config.json
-          if [ -f "$thresholdFile" ]; then
-            echo "Threshold file found"
-            threshold=$(jq '.coverageThreshold.global.lines' $thresholdFile)
-            echo "Threshold: $threshold"
-            echo "threshold=$threshold" >> $GITHUB_OUTPUT
-          else
-            echo "Threshold file not found"
-            exit 1
-            fi
-
-      - name: Modify coverage threshold
-        id: modify-coverage-threshold
-        run: |
-          current_threshold=${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}
-          new_threshold=$((current_threshold + $CODE_COVERAGE_MODIFIER))
-          echo "New Threshold: $new_threshold"
-
-          if [ "$new_threshold" -gt "$RAMPING_CODE_COVERAGE_CAP" ]; then
-            new_threshold=$RAMPING_CODE_COVERAGE_CAP
-          fi
-          echo "New Threshold (after cap): $new_threshold"
-
-          temp_file=jest.config.tmp
-
-          # Update the jest.config.json file with the new threshold
-          jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > $temp_file
-          mv $temp_file jest.config.json
-
-          echo "new_threshold=$new_threshold" >> $GITHUB_OUTPUT
-
-      - name: Output required line coverage
-        run: |
-          echo "Current Jest coverage threshold for lines is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
-          echo "Required line coverage is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}%"
-
       - name: Build with Maven
         run: mvn clean verify
 
