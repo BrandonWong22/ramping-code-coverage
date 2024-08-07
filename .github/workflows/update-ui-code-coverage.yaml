@@ -113,7 +113,10 @@ jobs:
 
             # test=$(echo "$lineCoverage" | awk '{print int($1)}')
 
-            if [ $lineCoverage -ge $RAMPING_CODE_COVERAGE_CAP | bc -l ]; then
+            echo "$lineCoverage"
+            echo "env.RAMPING_CODE_COVERAGE_CAP"
+
+            if [ $lineCoverage -ge $RAMPING_CODE_COVERAGE_CAP ]; then
               newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
             # elif [ $(($lineCoverage + CODE_COVERAGE_MODIFIER)) -ge "$RAMPING_CODE_COVERAGE_CAP" | bc -l ]; then
             #   newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
