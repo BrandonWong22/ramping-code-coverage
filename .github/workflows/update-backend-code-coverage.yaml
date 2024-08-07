@@ -4,13 +4,13 @@ on:
   workflow_call:
     inputs:
       backend-working-directory:
-        description: "The path of the backend"
+        description: 'The path of the backend'
         required: true
         type: string
 
 env:
-  CODE_COVERAGE_MODIFIER: 2
-  RAMPING_CODE_COVERAGE_CAP: 90
+  CODE_COVERAGE_MODIFIER: ${{ vars.CODE_COVERAGE_MODIFIER }}
+  RAMPING_CODE_COVERAGE_CAP: ${{ vars.RAMPING_CODE_COVERAGE_CAP }}
 
 jobs:
   push-updated-coverage-threshold-to-backend:
@@ -28,8 +28,8 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: "21"
-          distribution: "oracle"
+          java-version: '21'
+          distribution: 'oracle'
 
       - name: Install xmllint
         run: sudo apt-get install -y libxml2-utils

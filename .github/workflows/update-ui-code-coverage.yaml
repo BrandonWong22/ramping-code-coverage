@@ -9,8 +9,8 @@ on:
         type: string
 
 env:
-  CODE_COVERAGE_MODIFIER: 2
-  RAMPING_CODE_COVERAGE_CAP: 90
+  CODE_COVERAGE_MODIFIER: ${{ vars.CODE_COVERAGE_MODIFIER }}
+  RAMPING_CODE_COVERAGE_CAP: ${{ vars.RAMPING_CODE_COVERAGE_CAP }}
 
 jobs:
   push-updated-coverage-threshold-to-ui:
@@ -21,9 +21,6 @@ jobs:
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
-
-      - name: Checkout main branch jest.config.json
-        run: git checkout main -- jest.config.json
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -44,25 +41,97 @@ jobs:
           if [ -f "$coverageFile" ]; then
             echo "Coverage file found"
             cat $coverageFile
-            totalCoverage=$(jq '.total.lines.pct' $coverageFile)
-            echo "Total line coverage: $totalCoverage%"
-            echo "::set-output name=coverage::$totalCoverage"
+            lineCoverage=$(jq '.total.lines.pct' $coverageFile)
+            statementCoverage=$(jq '.total.statements.pct' $coverageFile)
+            branchCoverage=$(jq '.total.branches.pct' $coverageFile)
+            functionCoverage=$(jq '.total.functions.pct' $coverageFile)
+
+            echo "Total line coverage: $lineCoverage%"
+            echo "Total statement coverage: $statementCoverage"
+            echo "Total branch coverage: $branchCoverage"
+            echo "Total function coverage: $functionCoverage"
+
+            echo "lineCoverage=$lineCoverage" >> $GITHUB_OUTPUT
+            echo "statementCoverage=$statementCoverage" >> $GITHUB_OUTPUT
+            echo "branchCoverage=$branchCoverage" >> $GITHUB_OUTPUT
+            echo "functionCoverage=$functionCoverage" >> $GITHUB_OUTPUT
           else
             echo "Coverage file not found!"
             exit 1
           fi
 
-      - name: Print total coverage and threshold
+      - name: Check if PR coverage exceeds RAMPING_CODE_COVERAGE_CAP
+        id: check-if-coverage-exceeds-cap
         run: |
-          echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
+          lineCoverage=${{ steps.coverage.outputs.lineCoverage }}
+          statementCoverage=${{ steps.coverage.outputs.statementCoverage }}
+          branchCoverage=${{ steps.coverage.outputs.branchCoverage }}
+          functionCoverage=${{ steps.coverage.outputs.functionCoverage }}
 
-      - name: Update coverageThreshold if needed
-        # if: steps.coverage.outputs.coverage > steps.calculate-new-threshold.outputs.threshold
+          RAMPING_CODE_COVERAGE_CAP=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+
+          exceedsCap=false
+
+          if (( $(echo "$lineCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) &&
+            (( $(echo "$statementCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) &&
+            (( $(echo "$branchCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) &&
+            (( $(echo "$functionCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
+            exceedsCap=true
+            echo "Coverage exceeds the cap."
+          else
+            echo "Coverage does not exceed the cap."
+          fi
+
+          echo "exceedsCap=$exceedsCap" >> $GITHUB_OUTPUT
+
+      - name: Update coverageThreshold
+        if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
         run: |
           thresholdFile=jest.config.json
-          newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
-          echo "$newThreshold" > $thresholdFile
-          cat $thresholdFile
+
+          lineCoverage=${{ steps.coverage.outputs.lineCoverage }}
+          statementsCoverage=${{ steps.coverage.outputs.statementCoverage }}
+          branchCoverage=${{ steps.coverage.outputs.branchCoverage }}
+          functionCoverage=${{ steps.coverage.outputs.functionCoverage }}
+
+          updateCoverage() {
+            local coverage=$1
+            local newCoverage=$(echo "$coverage + $CODE_COVERAGE_MODIFIER" | bc -l)
+            
+            if (( $(echo "$coverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
+              newCoverage=$RAMPING_CODE_COVERAGE_CAP
+            elif (( $(echo "$newCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
+              newCoverage=$RAMPING_CODE_COVERAGE_CAP
+            fi
+
+            echo $newCoverage
+          }
+
+          if [ -f "$thresholdFile" ]; then
+            echo "Threshold file found"
+
+            newLineCoverage=$(updateCoverage $lineCoverage)
+            newStatementsCoverage=$(updateCoverage $statementsCoverage)
+            newBranchCoverage=$(updateCoverage $branchCoverage)
+            newFunctionCoverage=$(updateCoverage $functionCoverage)
+
+            echo "New Line Coverage: $newLineCoverage"
+            echo "New Statement Coverage: $newStatementsCoverage"
+            echo "New Branch Coverage: $newBranchCoverage"
+            echo "New Function Coverage: $newFunctionCoverage"
+
+            # Using jq to update the thresholds in jest.config.json
+            jq ".coverageThreshold.global.lines = $newLineCoverage | \
+                .coverageThreshold.global.statements = $newStatementsCoverage | \
+                .coverageThreshold.global.branches = $newBranchCoverage | \
+                .coverageThreshold.global.functions = $newFunctionCoverage" $thresholdFile > tmp.$$.json && mv tmp.$$.json $thresholdFile
+
+            cat jest.config.json
+
+          else
+            echo "Threshold file not found"
+            exit 1
+          fi
 
       - name: Get GitHub username and email
         id: user_info
