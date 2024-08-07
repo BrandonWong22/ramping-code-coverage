@@ -130,10 +130,10 @@ jobs:
             # requiredStatementCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
             # newThreshold=$(jq '.coverageThreshold.global.statements = $newVal' --argjson newVal "${{ steps.coverage.outputs.statementCoverage }}" $thresholdFile)
 
-            jq '.coverageThreshold.global.lines = $newLineCoverage |
-            .coverageThreshold.global.statements = 50 |
-            .coverageThreshold.global.functions = 50 |
-            .coverageThreshold.global.branches = 50' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
+            # jq '.coverageThreshold.global.lines = $newLineCoverage |
+            # .coverageThreshold.global.statements = 50 |
+            # .coverageThreshold.global.functions = 50 |
+            # .coverageThreshold.global.branches = 50' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
 
           else
             echo "Threshold file not found"
