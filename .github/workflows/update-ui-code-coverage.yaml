@@ -83,27 +83,27 @@ jobs:
 
           echo "exceedsCap=$exceedsCap" >> $GITHUB_OUTPUT
 
-      - name: Fetch main branch
-        if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
-        run: git fetch origin main:main
+      # remove this later
+      # - name: Fetch main branch
+      #   if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
+      #   run: git fetch origin main:main
 
-      - name: Checkout main branch jest.config.json
-        if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
-        run: |
-          git checkout main -- jest.config.json
-          cat jest.config.json
+      # - name: Checkout main branch jest.config.json
+      #   if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
+      #   run: |
+      #     git checkout main -- jest.config.json
+      #     cat jest.config.json
 
       # - name: Print total coverage and threshold
       #   run: |
       #     echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
 
-      # - name: Update coverageThreshold if needed
-      #   # if: steps.coverage.outputs.coverage > steps.calculate-new-threshold.outputs.threshold
-      #   run: |
-      #     thresholdFile=jest.config.json
-      #     newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
-      #     echo "$newThreshold" > $thresholdFile
-      #     cat $thresholdFile
+      - name: Update coverageThreshold if needed
+        run: |
+          thresholdFile=jest.config.json
+          # newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
+          # echo "$newThreshold" > $thresholdFile
+          cat $thresholdFile
 
       # - name: Get GitHub username and email
       #   id: user_info
