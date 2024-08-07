@@ -97,18 +97,38 @@ jobs:
           branchCoverage=${{ steps.coverage.outputs.branchCoverage }}
           functionCoverage=${{ steps.coverage.outputs.functionCoverage }}
 
+          updateCoverage() {
+            local coverage=$1
+            local newCoverage=$(echo "$coverage + $CODE_COVERAGE_MODIFIER" | bc -l)
+            
+            if (( $(echo "$coverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
+              newCoverage=$RAMPING_CODE_COVERAGE_CAP
+            elif (( $(echo "$newCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
+              newCoverage=$RAMPING_CODE_COVERAGE_CAP
+            fi
+
+            echo $newCoverage
+          }
+
           if [ -f "$thresholdFile" ]; then
             echo "Threshold file found"
 
-            newLineCoverage=$(echo "$lineCoverage + $CODE_COVERAGE_MODIFIER" | bc -l)
+            newLineCoverage=$(updateCoverage $lineCoverage)
+            newStatementCoverage=$(updateCoverage $statementCoverage)
+            newBranchCoverage=$(updateCoverage $branchCoverage)
+            newFunctionCoverage=$(updateCoverage $functionCoverage)
 
-            if (( $(echo "$lineCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
-              newLineCoverage=$RAMPING_CODE_COVERAGE_CAP
-            elif (( $(echo "$newLineCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
-              newLineCoverage=$RAMPING_CODE_COVERAGE_CAP
-            fi
+            echo "New Line Coverage: $newLineCoverage"
+            echo "New Statement Coverage: $newStatementCoverage"
+            echo "New Branch Coverage: $newBranchCoverage"
+            echo "New Function Coverage: $newFunctionCoverage"
 
-            echo "$newLineCoverage"
+            # Using jq to update the thresholds in jest.config.json
+            jq ".coverageThreshold.global.lines = $newLineCoverage | \
+                .coverageThreshold.global.statements = $newStatementCoverage | \
+                .coverageThreshold.global.branches = $newBranchCoverage | \
+                .coverageThreshold.global.functions = $newFunctionCoverage" $thresholdFile > tmp.$$.json && mv tmp.$$.json $thresholdFile
+
           else
             echo "Threshold file not found"
             exit 1
