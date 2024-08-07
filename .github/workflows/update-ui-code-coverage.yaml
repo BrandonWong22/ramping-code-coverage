@@ -10,7 +10,7 @@ on:
 
 env:
   CODE_COVERAGE_MODIFIER: 2
-  RAMPING_CODE_COVERAGE_CAP: 70
+  RAMPING_CODE_COVERAGE_CAP: 90
 
 jobs:
   push-updated-coverage-threshold-to-ui:
@@ -111,7 +111,6 @@ jobs:
             mainFunctionCoverage=$(jq '.coverageThreshold.global.branches' $thresholdFile)
 
             if [ $mainLineCoverage lt- $RAMPING_CODE_COVERAGE_CAP ]; then
-              # requiredLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
               requiredLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
               newThreshold=$(jq '.coverageThreshold.global.lines = $requiredLineCoverage' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
             fi
