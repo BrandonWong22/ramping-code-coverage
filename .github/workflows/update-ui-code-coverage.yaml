@@ -113,7 +113,7 @@ jobs:
             jq '.coverageThreshold.global.lines = 50 |
             .coverageThreshold.global.statements = 50 |
             .coverageThreshold.global.functions = 50 |
-            .coverageThreshold.global.branches = 50' threshold.json > threshold.tmp && mv threshold.tmp threshold.json
+            .coverageThreshold.global.branches = 50' thresholdFile > threshold.tmp && mv threshold.tmp thresholdFile
 
 
             # if [ $mainLineCoverage <= $RAMPING_CODE_COVERAGE_CAP ]; then
