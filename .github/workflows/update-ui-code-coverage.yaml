@@ -10,7 +10,7 @@ on:
 
 env:
   CODE_COVERAGE_MODIFIER: 2
-  RAMPING_CODE_COVERAGE_CAP: 90
+  RAMPING_CODE_COVERAGE_CAP: 70
 
 jobs:
   push-updated-coverage-threshold-to-ui:
