@@ -102,22 +102,24 @@ jobs:
         if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
         run: |
           thresholdFile=jest.config.json
+
           lineCoverage=${{ steps.coverage.outputs.lineCoverage }}
+          statementsCoverage=${{ steps.coverage.outputs.statementCoverage }}
+          branchCoverage=${{ steps.coverage.outputs.branchCoverage }}
+          functionCoverage=${{ steps.coverage.outputs.functionCoverage }}
 
           if [ -f "$thresholdFile" ]; then
             echo "Threshold file found"
 
-            test=$(echo "$lineCoverage" | awk '{print int($1)}')
+            # test=$(echo "$lineCoverage" | awk '{print int($1)}')
 
-            echo "$test"
-
-            # if [ "$test" -ge $RAMPING_CODE_COVERAGE_CAP | bc -l ]; then
-            #   newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
-            # elif [ $((test + CODE_COVERAGE_MODIFIER)) -ge "$RAMPING_CODE_COVERAGE_CAP" | bc -l ]; then
-            #   newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
-            # else
-            #   newLineCoverage=$((test + CODE_COVERAGE_MODIFIER))
-            # fi
+            if [ $lineCoverage -ge $RAMPING_CODE_COVERAGE_CAP | bc -l ]; then
+              newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+            elif [ $(($lineCoverage + CODE_COVERAGE_MODIFIER)) -ge "$RAMPING_CODE_COVERAGE_CAP" | bc -l ]; then
+              newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+            else
+              newLineCoverage=$(($lineCoverage + CODE_COVERAGE_MODIFIER))
+            fi
 
             # jq '.coverageThreshold.global.lines = $newLineCoverage |
             # .coverageThreshold.global.statements = 50 |
