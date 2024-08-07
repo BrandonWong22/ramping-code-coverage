@@ -111,12 +111,14 @@ jobs:
             # mainBranchCoverage=$(jq '.coverageThreshold.global.functions' $thresholdFile)
             # mainFunctionCoverage=$(jq '.coverageThreshold.global.branches' $thresholdFile)
 
-            if [ "$lineCoverage" -ge $RAMPING_CODE_COVERAGE_CAP | bc -l ]; then
+            test=$(echo "$lineCoverage" | awk '{print int($1)}')
+
+            if [ "$test" -ge $RAMPING_CODE_COVERAGE_CAP | bc -l ]; then
               newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
-            elif [ $((lineCoverage + CODE_COVERAGE_MODIFIER)) -ge "$RAMPING_CODE_COVERAGE_CAP" | bc -l ]; then
+            elif [ $((test + CODE_COVERAGE_MODIFIER)) -ge "$RAMPING_CODE_COVERAGE_CAP" | bc -l ]; then
               newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
             else
-              newLineCoverage=$((lineCoverage + CODE_COVERAGE_MODIFIER))
+              newLineCoverage=$((test + CODE_COVERAGE_MODIFIER))
             fi
 
 
