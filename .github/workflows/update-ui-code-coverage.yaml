@@ -115,10 +115,10 @@ jobs:
 
             if [ $lineCoverage -ge $RAMPING_CODE_COVERAGE_CAP | bc -l ]; then
               newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
-            elif [ $(($lineCoverage + CODE_COVERAGE_MODIFIER)) -ge "$RAMPING_CODE_COVERAGE_CAP" | bc -l ]; then
-              newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
-            else
-              newLineCoverage=$(($lineCoverage + CODE_COVERAGE_MODIFIER))
+            # elif [ $(($lineCoverage + CODE_COVERAGE_MODIFIER)) -ge "$RAMPING_CODE_COVERAGE_CAP" | bc -l ]; then
+            #   newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+            # else
+            #   newLineCoverage=$(($lineCoverage + CODE_COVERAGE_MODIFIER))
             fi
 
             # jq '.coverageThreshold.global.lines = $newLineCoverage |
