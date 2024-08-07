@@ -22,12 +22,6 @@ jobs:
       - name: Check out the code
         uses: actions/checkout@v4
 
-      # - name: Fetch main branch
-      #   run: git fetch origin main:main
-
-      # - name: Checkout main branch jest.config.json
-      #   run: git checkout main -- jest.config.json
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -88,6 +82,16 @@ jobs:
           fi
 
           echo "exceedsCap=$exceedsCap" >> $GITHUB_OUTPUT
+
+      - name: Fetch main branch
+        if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
+        run: git fetch origin main:main
+
+      - name: Checkout main branch jest.config.json
+        if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
+        run: |
+          git checkout main -- jest.config.json
+          cat jest.config.json
 
       # - name: Print total coverage and threshold
       #   run: |
