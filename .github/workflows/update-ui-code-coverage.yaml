@@ -110,7 +110,10 @@ jobs:
             mainBranchCoverage=$(jq '.coverageThreshold.global.functions' $thresholdFile)
             mainFunctionCoverage=$(jq '.coverageThreshold.global.branches' $thresholdFile)
 
+            echo "$mainLineCoverage"
+
             if [ $mainLineCoverage lt- $RAMPING_CODE_COVERAGE_CAP ]; then
+              echo "yooo"
               requiredLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
               newThreshold=$(jq '.coverageThreshold.global.lines = $requiredLineCoverage' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
             fi
