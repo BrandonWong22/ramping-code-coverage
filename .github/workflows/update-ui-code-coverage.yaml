@@ -66,6 +66,29 @@ jobs:
             exit 1
           fi
 
+      - name: Check if PR coverage exceeds RAMPING_CODE_COVERAGE_CAP
+        id: check-if-coverage-exceeds-cap
+        run: |
+          lineCoverage=${{ steps.coverage.outputs.lineCoverage }}
+          statementCoverage=${{ steps.coverage.outputs.statementCoverage }}
+          branchCoverage=${{ steps.coverage.outputs.branchCoverage }}
+          functionCoverage=${{ steps.coverage.outputs.functionCoverage }}
+          RAMPING_CODE_COVERAGE_CAP=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+
+          exceedsCap=false
+
+          if (( $(echo "$lineCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) &&
+            (( $(echo "$statementCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) &&
+            (( $(echo "$branchCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )) &&
+            (( $(echo "$functionCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
+            exceedsCap=true
+            echo "Coverage exceeds the cap."
+          else
+            echo "Coverage does not exceed the cap."
+          fi
+
+          echo "exceedsCap=$exceedsCap" >> $GITHUB_OUTPUT
+
       # - name: Print total coverage and threshold
       #   run: |
       #     echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
