@@ -2,10 +2,13 @@ import App from './App';
 import { render, screen } from '@testing-library/react';
 import Header from './components/Header';
 
+const DEFAULT_PASSWORD = '21312453245';
+
 test.skip('Heading should be Vite + React', () => {
   render(<App />);
 
   const headingElement = screen.getByText('Vite + React');
+  console.log(DEFAULT_PASSWORD);
 
   expect(headingElement).toBeInTheDocument();
 });
