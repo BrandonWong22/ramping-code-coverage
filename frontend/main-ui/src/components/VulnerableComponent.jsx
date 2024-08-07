@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 
 var test = 123;
 
@@ -8,6 +9,10 @@ const VulnerableComponent = () => {
   const handleInputChange = (event) => {
     setUserId(event.target.value);
   };
+
+  useEffect(() => {
+    setUserId('abc');
+  }, [userId]);
 
   const handleButtonClick = () => {
     // Insecure use of user input in a URL
