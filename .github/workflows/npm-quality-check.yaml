@@ -8,16 +8,16 @@ on:
         required: true
         type: string
 
-env:
-  CODE_COVERAGE_MODIFIER: 2
-  RAMPING_CODE_COVERAGE_CAP: 70 # need to update this after testing
+# env:
+#   CODE_COVERAGE_MODIFIER: 2
+#   RAMPING_CODE_COVERAGE_CAP: 70 # need to update this after testing
 
 jobs:
   check-npm-quality-on-ui:
     runs-on: ubuntu-latest
-    # env:
-    #   CODE_COVERAGE_MODIFIER: ${{ secrets.CODE_COVERAGE_MODIFIER }}
-    #   RAMPING_CODE_COVERAGE_CAP: ${{ secrets.RAMPING_CODE_COVERAGE_CAP }}
+    env:
+      CODE_COVERAGE_MODIFIER: ${{ secrets.CODE_COVERAGE_MODIFIER }}
+      RAMPING_CODE_COVERAGE_CAP: ${{ secrets.RAMPING_CODE_COVERAGE_CAP }}
     defaults:
       run:
         working-directory: ${{ inputs.ui-working-directory }}
@@ -182,59 +182,3 @@ jobs:
             echo "PR coverage does not exceed the required coverage."
             exit 1
           fi
-
-      # - name: Modify coverage threshold
-      #   id: modify-coverage-threshold
-      #   run: |
-      #     current_threshold=${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}
-      #     new_threshold=$((current_threshold + $CODE_COVERAGE_MODIFIER))
-      #     echo "New Threshold: $new_threshold"
-
-      #     if [ "$new_threshold" -gt "$RAMPING_CODE_COVERAGE_CAP" ]; then
-      #       new_threshold=$RAMPING_CODE_COVERAGE_CAP
-      #     fi
-      #     echo "New Threshold (after cap): $new_threshold"
-
-      #     temp_file=jest.config.tmp
-
-      #     # Update the jest.config.json file with the new threshold
-      #     jq --argjson new_threshold "$new_threshold" '.coverageThreshold.global.lines = $new_threshold' jest.config.json > $temp_file
-      #     mv $temp_file jest.config.json
-
-      #     echo "new_threshold=$new_threshold" >> $GITHUB_OUTPUT
-
-      # - name: Output required line coverage
-      #   run: |
-      #     echo "Current Jest coverage threshold for lines is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
-      #     echo "Required line coverage is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}%"
-
-      # - name: Install dependencies
-      #   run: npm install
-
-      # - name: View jest.config.json
-      #   run: cat jest.config.json
-
-      # - name: Run coverage and print results
-      #   run: |
-      #     npm run coverage
-
-      # - name: Read and print coverage summary
-      #   id: pull-request-coverage
-      #   run: |
-      #     coverageFile=coverage/coverage-summary.json
-      #     if [ -f "$coverageFile" ]; then
-      #       echo "Coverage file found"
-      #       cat $coverageFile
-      #       totalCoverage=$(jq '.total.lines.pct' $coverageFile)
-      #       echo "Total line coverage: $totalCoverage%"
-      #       echo "totalCoverage=$totalCoverage" >> $GITHUB_OUTPUT
-      #     else
-      #       echo "Coverage file not found!"
-      #       exit 1
-      #     fi
-
-      # - name: Print total coverage and threshold
-      #   run: |
-      #     echo "The line coverage on the Pull Request is ${{ steps.pull-request-coverage.outputs.totalCoverage }}%"
-      #     echo "The line coverage threshold on main is ${{ steps.extract-min-code-coverage-from-main.outputs.threshold }}%"
-      #     echo "The required line coverage threshold is ${{ steps.modify-coverage-threshold.outputs.new_threshold }}%"
