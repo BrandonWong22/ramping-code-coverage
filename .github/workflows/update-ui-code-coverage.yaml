@@ -124,7 +124,7 @@ jobs:
           fi
 
           # newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
-          # echo "$newThreshold" > $thresholdFile
+          echo "$newThreshold" > $thresholdFile
           cat $thresholdFile
 
       # - name: Get GitHub username and email
