@@ -95,23 +95,30 @@ jobs:
           if [ -f "$thresholdFile" ]; then
             echo "Threshold file found"
 
-            if [ $(echo "$lineCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) ]; then
-              newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
-            # elif [ $(($lineCoverage + CODE_COVERAGE_MODIFIER)) -ge "$RAMPING_CODE_COVERAGE_CAP" | bc -l ]; then
-            #   newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
-            # else
-            #   newLineCoverage=$(($lineCoverage + CODE_COVERAGE_MODIFIER))
+            newLineCoverage=$(echo "$lineCoverage + $CODE_COVERAGE_MODIFIER" | bc -l)
+
+            if (( $(echo "$lineCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
+              newLineCoverage=$RAMPING_CODE_COVERAGE_CAP
+            elif (( $(echo "$newLineCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
+              newLineCoverage=$RAMPING_CODE_COVERAGE_CAP
             fi
-
-            # jq '.coverageThreshold.global.lines = $newLineCoverage |
-            # .coverageThreshold.global.statements = 50 |
-            # .coverageThreshold.global.functions = 50 |
-            # .coverageThreshold.global.branches = 50' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
-
           else
             echo "Threshold file not found"
             exit 1
           fi
+
+      # if [ $(echo "$lineCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) ]; then
+      #   newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+      # # elif [ $(($lineCoverage + CODE_COVERAGE_MODIFIER)) -ge "$RAMPING_CODE_COVERAGE_CAP" | bc -l ]; then
+      # #   newLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+      # # else
+      # #   newLineCoverage=$(($lineCoverage + CODE_COVERAGE_MODIFIER))
+      # fi
+
+      # # jq '.coverageThreshold.global.lines = $newLineCoverage |
+      # # .coverageThreshold.global.statements = 50 |
+      # # .coverageThreshold.global.functions = 50 |
+      # # .coverageThreshold.global.branches = 50' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
 
       # - name: Get GitHub username and email
       #   id: user_info
