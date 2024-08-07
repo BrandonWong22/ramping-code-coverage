@@ -113,7 +113,7 @@ jobs:
             jq '.coverageThreshold.global.lines = 50 |
             .coverageThreshold.global.statements = 50 |
             .coverageThreshold.global.functions = 50 |
-            .coverageThreshold.global.branches = 50' thresholdFile > jest.config.tmp && mv jest.config.tmp thresholdFile
+            .coverageThreshold.global.branches = 50' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
 
 
             # if [ $mainLineCoverage <= $RAMPING_CODE_COVERAGE_CAP ]; then
