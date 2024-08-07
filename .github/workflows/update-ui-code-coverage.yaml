@@ -110,10 +110,13 @@ jobs:
             mainBranchCoverage=$(jq '.coverageThreshold.global.functions' $thresholdFile)
             mainFunctionCoverage=$(jq '.coverageThreshold.global.branches' $thresholdFile)
 
-            jq '.coverageThreshold.global.lines = 50 |
-            .coverageThreshold.global.statements = 50 |
-            .coverageThreshold.global.functions = 50 |
-            .coverageThreshold.global.branches = 50' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
+            if (( $(echo "$lineCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
+              newLineCoverage=$RAMPING_CODE_COVERAGE_CAP
+            elif (( $(echo "$lineCoverage + $CODE_COVERAGE_MODIFIER >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
+              newLineCoverage=$RAMPING_CODE_COVERAGE_CAP
+            else
+              newLineCoverage=$(echo "$lineCoverage + $CODE_COVERAGE_MODIFIER" | bc)
+            fi
 
 
             # if [ $mainLineCoverage <= $RAMPING_CODE_COVERAGE_CAP ]; then
@@ -123,6 +126,11 @@ jobs:
 
             # requiredStatementCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
             # newThreshold=$(jq '.coverageThreshold.global.statements = $newVal' --argjson newVal "${{ steps.coverage.outputs.statementCoverage }}" $thresholdFile)
+
+            jq '.coverageThreshold.global.lines = $newLineCoverage |
+            .coverageThreshold.global.statements = 50 |
+            .coverageThreshold.global.functions = 50 |
+            .coverageThreshold.global.branches = 50' jest.config.json > jest.config.tmp && mv jest.config.tmp jest.config.json
 
           else
             echo "Threshold file not found"
