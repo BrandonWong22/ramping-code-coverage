@@ -118,7 +118,7 @@ jobs:
             # fi
 
             requiredStatementCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
-            newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.statementCoverage }}" $thresholdFile)
+            newThreshold=$(jq '.coverageThreshold.global.statements = $newVal' --argjson newVal "${{ steps.coverage.outputs.statementCoverage }}" $thresholdFile)
 
           else
             echo "Threshold file not found"
