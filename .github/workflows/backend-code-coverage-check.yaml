@@ -9,15 +9,12 @@ on:
         type: string
 
 env:
-  CODE_COVERAGE_MODIFIER: 2
-  RAMPING_CODE_COVERAGE_CAP: 70 # need to update this after testing
+  CODE_COVERAGE_MODIFIER: ${{ vars.CODE_COVERAGE_MODIFIER }}
+  RAMPING_CODE_COVERAGE_CAP: ${{ vars.RAMPING_CODE_COVERAGE_CAP }}
 
 jobs:
   check-code-coverage-on-main-backend:
     runs-on: ubuntu-latest
-    # env:
-    #   CODE_COVERAGE_MODIFIER: ${{ secrets.CODE_COVERAGE_MODIFIER }}
-    #   RAMPING_CODE_COVERAGE_CAP: ${{ secrets.RAMPING_CODE_COVERAGE_CAP }}
     defaults:
       run:
         working-directory: ${{ inputs.backend-working-directory }}
