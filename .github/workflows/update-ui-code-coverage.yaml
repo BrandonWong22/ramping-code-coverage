@@ -102,6 +102,8 @@ jobs:
             elif (( $(echo "$newLineCoverage >= $RAMPING_CODE_COVERAGE_CAP" | bc -l) )); then
               newLineCoverage=$RAMPING_CODE_COVERAGE_CAP
             fi
+
+            echo "$newLineCoverage"
           else
             echo "Threshold file not found"
             exit 1
