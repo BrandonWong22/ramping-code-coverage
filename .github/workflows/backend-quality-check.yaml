@@ -1,4 +1,4 @@
-name: Check code coverage on main-backend
+name: Check code quality on backend (Java)
 
 on:
   workflow_call:
@@ -21,6 +21,12 @@ jobs:
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
+
+      - name: Checkstyle for Java
+        uses: dbelyaev/action-checkstyle@master
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review 
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
