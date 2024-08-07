@@ -114,7 +114,7 @@ jobs:
             echo "Threshold file found"
 
             newLineCoverage=$(updateCoverage $lineCoverage)
-            newStatementCoverage=$(updateCoverage $statementCoverage)
+            newStatementsCoverage=$(updateCoverage $statementsCoverage)
             newBranchCoverage=$(updateCoverage $branchCoverage)
             newFunctionCoverage=$(updateCoverage $functionCoverage)
 
@@ -125,7 +125,7 @@ jobs:
 
             # Using jq to update the thresholds in jest.config.json
             jq ".coverageThreshold.global.lines = $newLineCoverage | \
-                .coverageThreshold.global.statements = $newStatementCoverage | \
+                .coverageThreshold.global.statements = $newStatementsCoverage | \
                 .coverageThreshold.global.branches = $newBranchCoverage | \
                 .coverageThreshold.global.functions = $newFunctionCoverage" $thresholdFile > tmp.$$.json && mv tmp.$$.json $thresholdFile
 
