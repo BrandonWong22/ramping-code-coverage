@@ -98,9 +98,29 @@ jobs:
       #   run: |
       #     echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
 
-      - name: Update coverageThreshold if needed
+      - name: Update coverageThreshold
+        if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
         run: |
           thresholdFile=jest.config.json
+
+          if [ -f "$thresholdFile" ]; then
+            echo "Threshold file found"
+            mainLineCoverage=$(jq '.coverageThreshold.global.lines' $thresholdFile)
+            mainStatementCoverage=$(jq '.coverageThreshold.global.statements' $thresholdFile)
+            mainBranchCoverage=$(jq '.coverageThreshold.global.functions' $thresholdFile)
+            mainFunctionCoverage=$(jq '.coverageThreshold.global.branches' $thresholdFile)
+
+            if [ $mainLineCoverage lt- $RAMPING_CODE_COVERAGE_CAP ]; then
+              # requiredLineCoverage=${{ env.RAMPING_CODE_COVERAGE_CAP }}
+              requiredLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
+              newThreshold=$(jq '.coverageThreshold.global.lines = $requiredLineCoverage' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
+            fi
+
+          else
+            echo "Threshold file not found"
+            exit 1
+          fi
+
           # newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
           # echo "$newThreshold" > $thresholdFile
           cat $thresholdFile
