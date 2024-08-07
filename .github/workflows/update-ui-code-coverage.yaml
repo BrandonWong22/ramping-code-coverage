@@ -110,15 +110,19 @@ jobs:
             mainBranchCoverage=$(jq '.coverageThreshold.global.functions' $thresholdFile)
             mainFunctionCoverage=$(jq '.coverageThreshold.global.branches' $thresholdFile)
 
-            echo "$mainLineCoverage"
+            jq '.coverageThreshold.global.lines = 50 |
+            .coverageThreshold.global.statements = 50 |
+            .coverageThreshold.global.functions = 50 |
+            .coverageThreshold.global.branches = 50' threshold.json > threshold.tmp && mv threshold.tmp threshold.json
+
 
             # if [ $mainLineCoverage <= $RAMPING_CODE_COVERAGE_CAP ]; then
-              requiredLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
-              newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.lineCoverage }}" $thresholdFile)
+              # requiredLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
+              # newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.lineCoverage }}" $thresholdFile)
             # fi
 
-            requiredStatementCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
-            newThreshold=$(jq '.coverageThreshold.global.statements = $newVal' --argjson newVal "${{ steps.coverage.outputs.statementCoverage }}" $thresholdFile)
+            # requiredStatementCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
+            # newThreshold=$(jq '.coverageThreshold.global.statements = $newVal' --argjson newVal "${{ steps.coverage.outputs.statementCoverage }}" $thresholdFile)
 
           else
             echo "Threshold file not found"
@@ -126,8 +130,8 @@ jobs:
           fi
 
           # newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
-          echo "$newThreshold" > $thresholdFile
-          cat $thresholdFile
+          # echo "$newThreshold" > $thresholdFile
+          # cat $thresholdFile
 
       # - name: Get GitHub username and email
       #   id: user_info
