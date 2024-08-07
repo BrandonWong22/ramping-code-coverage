@@ -112,11 +112,11 @@ jobs:
 
             echo "$mainLineCoverage"
 
-            if [ $mainLineCoverage < $RAMPING_CODE_COVERAGE_CAP ]; then
+            # if [ $mainLineCoverage <= $RAMPING_CODE_COVERAGE_CAP ]; then
               echo "yooo"
               requiredLineCoverage=$(($mainLineCoverage + CODE_COVERAGE_MODIFIER))
               newThreshold=$(jq '.coverageThreshold.global.lines = $requiredLineCoverage' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
-            fi
+            # fi
 
           else
             echo "Threshold file not found"
