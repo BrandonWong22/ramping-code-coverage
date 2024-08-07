@@ -119,7 +119,7 @@ jobs:
             newFunctionCoverage=$(updateCoverage $functionCoverage)
 
             echo "New Line Coverage: $newLineCoverage"
-            echo "New Statement Coverage: $newStatementCoverage"
+            echo "New Statement Coverage: $newStatementsCoverage"
             echo "New Branch Coverage: $newBranchCoverage"
             echo "New Function Coverage: $newFunctionCoverage"
 
@@ -128,6 +128,8 @@ jobs:
                 .coverageThreshold.global.statements = $newStatementsCoverage | \
                 .coverageThreshold.global.branches = $newBranchCoverage | \
                 .coverageThreshold.global.functions = $newFunctionCoverage" $thresholdFile > tmp.$$.json && mv tmp.$$.json $thresholdFile
+
+            cat jest.config.json
 
           else
             echo "Threshold file not found"
