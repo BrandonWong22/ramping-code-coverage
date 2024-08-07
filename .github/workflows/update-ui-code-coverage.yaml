@@ -22,6 +22,9 @@ jobs:
       - name: Check out the code
         uses: actions/checkout@v4
 
+      # - name: Fetch main branch
+      #   run: git fetch origin main:main
+
       - name: Checkout main branch jest.config.json
         run: git checkout main -- jest.config.json
 
@@ -52,33 +55,33 @@ jobs:
             exit 1
           fi
 
-      - name: Print total coverage and threshold
-        run: |
-          echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
+      # - name: Print total coverage and threshold
+      #   run: |
+      #     echo "The total coverage is ${{ steps.coverage.outputs.coverage }}%"
 
-      - name: Update coverageThreshold if needed
-        # if: steps.coverage.outputs.coverage > steps.calculate-new-threshold.outputs.threshold
-        run: |
-          thresholdFile=jest.config.json
-          newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
-          echo "$newThreshold" > $thresholdFile
-          cat $thresholdFile
+      # - name: Update coverageThreshold if needed
+      #   # if: steps.coverage.outputs.coverage > steps.calculate-new-threshold.outputs.threshold
+      #   run: |
+      #     thresholdFile=jest.config.json
+      #     newThreshold=$(jq '.coverageThreshold.global.lines = $newVal' --argjson newVal "${{ steps.coverage.outputs.coverage }}" $thresholdFile)
+      #     echo "$newThreshold" > $thresholdFile
+      #     cat $thresholdFile
 
-      - name: Get GitHub username and email
-        id: user_info
-        run: |
-          echo "GITHUB_USERNAME=${{ github.actor }}" >> $GITHUB_ENV
-          git_email=$(git log -1 --pretty=format:'%ae')
-          echo "GITHUB_EMAIL=$git_email" >> $GITHUB_ENV
+      # - name: Get GitHub username and email
+      #   id: user_info
+      #   run: |
+      #     echo "GITHUB_USERNAME=${{ github.actor }}" >> $GITHUB_ENV
+      #     git_email=$(git log -1 --pretty=format:'%ae')
+      #     echo "GITHUB_EMAIL=$git_email" >> $GITHUB_ENV
 
-      - name: Configure Git
-        run: |
-          git config user.name $GITHUB_USERNAME
-          git config user.email $GITHUB_EMAIL
+      # - name: Configure Git
+      #   run: |
+      #     git config user.name $GITHUB_USERNAME
+      #     git config user.email $GITHUB_EMAIL
 
-      - name: Commit and push updated jest.config.json
-        run: |
-          git pull
-          git add .
-          git commit -m "Update jest.config.json with new coverage threshold"
-          git push origin HEAD:main
+      # - name: Commit and push updated jest.config.json
+      #   run: |
+      #     git pull
+      #     git add .
+      #     git commit -m "Update jest.config.json with new coverage threshold"
+      #     git push origin HEAD:main
