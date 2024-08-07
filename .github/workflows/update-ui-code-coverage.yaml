@@ -8,12 +8,16 @@ on:
         required: true
         type: string
 
+env:
+  CODE_COVERAGE_MODIFIER: 2
+  RAMPING_CODE_COVERAGE_CAP: 70 # need to update this after testing
+
 jobs:
   push-updated-coverage-threshold-to-ui:
     runs-on: ubuntu-latest
-    env:
-      CODE_COVERAGE_MODIFIER: ${{ secrets.CODE_COVERAGE_MODIFIER }}
-      RAMPING_CODE_COVERAGE_CAP: ${{ secrets.RAMPING_CODE_COVERAGE_CAP }}
+    # env:
+    #   CODE_COVERAGE_MODIFIER: ${{ secrets.CODE_COVERAGE_MODIFIER }}
+    #   RAMPING_CODE_COVERAGE_CAP: ${{ secrets.RAMPING_CODE_COVERAGE_CAP }}
     defaults:
       run:
         working-directory: ${{ inputs.ui-working-directory }}
