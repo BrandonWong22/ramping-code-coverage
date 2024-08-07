@@ -71,8 +71,6 @@ jobs:
           branchCoverage=${{ steps.coverage.outputs.branchCoverage }}
           functionCoverage=${{ steps.coverage.outputs.functionCoverage }}
 
-          echo "70"
-
           RAMPING_CODE_COVERAGE_CAP=${{ env.RAMPING_CODE_COVERAGE_CAP }}
 
           exceedsCap=false
