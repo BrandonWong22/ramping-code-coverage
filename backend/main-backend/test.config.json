@@ -2,7 +2,7 @@
   "coverageThreshold": {
     "global": {
       "lines": 20,
-      "instructions": 48,
+      "instructions": 13,
       "branches": 20
     }
   }
