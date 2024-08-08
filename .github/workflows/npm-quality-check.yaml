@@ -39,6 +39,7 @@ jobs:
           npm run lint
       
       - name: Run unit tests
+        if: success() || failure()   
         run: npm test 
       
       - name: Unit tests Report
