@@ -19,5 +19,6 @@
       "functions": 27,
       "branches": 90
     }
-  }
+  },
+  "reporters": [ "default", "jest-junit" ]
 }
