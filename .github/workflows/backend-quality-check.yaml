@@ -59,8 +59,9 @@ jobs:
       - name: Build with Maven
         run: mvn clean verify
 
-      - name: Unit tests
-        run: mvn test
+      - name: Publish Test Report
+        if: success() || failure()
+        uses: scacap/action-surefire-report@v1
 
       - name: Jacoco Code Coverage
         run: mvn jacoco:report
