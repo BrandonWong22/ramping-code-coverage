@@ -1,0 +1,10 @@
+name: 'JS/TS analysis with JSX'
+queries:
+  - security-and-quality
+
+paths:
+  include:
+    - '**/*.js'
+    - '**/*.jsx'
+    - '**/*.ts'
+    - '**/*.tsx'
