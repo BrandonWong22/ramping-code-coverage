@@ -56,15 +56,16 @@ jobs:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review 
 
-      - name: Install Maven Dependencies
-        run: mvn clean install
+      - name: Build with Maven
+        run: mvn clean verify
 
-      - name: Build and Run Tests
-        run: mvn test --batch-mode --fail-at-end
-
-      - name: Publish Test Report
-        if: success() || failure()
-        uses: scacap/action-surefire-report@v1
+      - name: Unit tests Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    
+        with:
+          name: JUnit Tests            
+          path: ${{ inputs.backend-working-directory }}/target/surefire-reports/TEST-*.xml
+          reporter: java-junit
 
       - name: Jacoco Code Coverage
         run: mvn jacoco:report
