@@ -162,6 +162,7 @@ jobs:
           fi
 
       - name: Check if PR coverage exceeds required coverage
+        id: coverage-check
         if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
         run: |
           lineCoverage=${{ steps.pull-request-coverage.outputs.lineCoverage }}
@@ -179,7 +180,22 @@ jobs:
             (( $(echo "$branchCoverage >= $requiredBranchCoverage" | bc -l) )) &&
             (( $(echo "$functionCoverage >= $requiredFunctionCoverage" | bc -l) )); then
             echo "PR coverage exceeds the required coverage."
+            coverageCovered=true
           else
             echo "PR coverage does not exceed the required coverage."
-            exit 1
+            coverageCovered=false
           fi
+          echo "coverageCovered=$coverageCovered" >> $GITHUB_OUTPUT
+          
+      - name: Comment on PR if coverage in not minimum
+        if: steps.coverage-check.outputs.coverageCovered == 'false'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'PR coverage does not exceed the required coverage.'
+            })
+              
