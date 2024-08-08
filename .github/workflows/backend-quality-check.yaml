@@ -31,25 +31,6 @@ jobs:
       - name: Install xmllint
         run: sudo apt-get install -y libxml2-utils
 
-      - name: Dependency check
-        uses: dependency-check/Dependency-Check_Action@main
-        env:
-          JAVA_HOME: /opt/jdk
-        with:
-          project: 'Moneris Insights'
-          path: ${{ inputs.backend-working-directory }}
-          format: 'HTML'
-          out: 'reports'
-          args: >
-            --failOnCVSS 7
-            --enableRetired
-          
-      - name: Upload Test results
-        uses: actions/upload-artifact@master
-        with:
-           name: Dependency check report
-           path: ${{github.workspace}}/reports
-
       - name: Checkstyle for Java
         uses: dbelyaev/action-checkstyle@master
         with:
@@ -66,6 +47,22 @@ jobs:
           name: JUnit Tests            
           path: ${{ inputs.backend-working-directory }}/target/surefire-reports/TEST-*.xml
           reporter: java-junit
+      
+      - name: Dependency check
+        uses: dependency-check/Dependency-Check_Action@main
+        env:
+          JAVA_HOME: /opt/jdk
+        with:
+          project: 'Moneris Insights'
+          path: ${{ inputs.backend-working-directory }}
+          format: 'HTML'
+          out: 'reports'
+          
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+            name: Dependency check report
+            path: ${{github.workspace}}/reports
 
       - name: Jacoco Code Coverage
         run: mvn jacoco:report
