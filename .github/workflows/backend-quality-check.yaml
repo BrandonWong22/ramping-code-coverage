@@ -1,4 +1,4 @@
-name: Check code coverage on main-backend
+name: Check code quality on backend (Java)
 
 on:
   workflow_call:
@@ -30,6 +30,12 @@ jobs:
 
       - name: Install xmllint
         run: sudo apt-get install -y libxml2-utils
+
+      - name: Checkstyle for Java
+        uses: dbelyaev/action-checkstyle@master
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review 
 
       - name: Build with Maven
         run: mvn clean verify

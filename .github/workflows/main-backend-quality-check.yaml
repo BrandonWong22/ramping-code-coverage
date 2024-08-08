@@ -11,6 +11,6 @@ on:
 
 jobs:
   check-code-coverage-on-main-backend:
-    uses: ./.github/workflows/backend-code-coverage-check.yaml
+    uses: ./.github/workflows/backend-quality-check.yaml
     with:
       backend-working-directory: "backend/main-backend"
