@@ -47,7 +47,7 @@ jobs:
         if: success() || failure()   
         with:
           name: JEST Tests
-          path: ${{ inputs.ui-working-directory }}/reports/jest-*.xml
+          path: ${{ inputs.ui-working-directory }}/junit.xml
           reporter: jest-junit  
 
       - name: Run coverage and print results
