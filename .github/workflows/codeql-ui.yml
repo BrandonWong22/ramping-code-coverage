@@ -17,9 +17,9 @@ on:
   pull_request:
     branches: [ "main" ]
     paths:
-      - 'frontend/main-ui'
-      - 'frontend/customers-ui'
-      - 'frontend/competition-ui'
+      - 'frontend/main-ui/**'
+      - 'frontend/customers-ui/**'
+      - 'frontend/competition-ui/**'
 
   # schedule:
   #   - cron: '22 6 * * 5'
