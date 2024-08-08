@@ -17,7 +17,7 @@ on:
   pull_request:
     branches: [ "main" ]
     paths:
-      - 'frontend/main-ui/'
+      - 'frontend/main-ui'
       - 'frontend/customers-ui'
       - 'frontend/competition-ui'
 
