@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const InsecureComponent = () => {
-  const [userInput, setUserInput] = useState(
-    '<script>alert("CodeQL Alert!")</script>'
-  );
+  const [userInput, _] = useState('<script>alert("CodeQL Alert!")</script>');
 
   return (
     <div>
