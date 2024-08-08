@@ -64,7 +64,7 @@ jobs:
         if: success() || failure()    
         with:
           name: JUnit Tests            
-          path: ${{ inputs.backend-working-directory }}/target/surefire-reports/TEST-*.xml
+          path: target/surefire-reports/TEST-*.xml
           reporter: java-junit
 
       - name: Jacoco Code Coverage
