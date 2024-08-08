@@ -58,11 +58,14 @@ jobs:
           format: 'HTML'
           out: 'reports'
           
-      - name: Upload Test results
+      - name: Upload Dependency Report results
         uses: actions/upload-artifact@master
         with:
             name: Dependency check report
             path: ${{github.workspace}}/reports
+      
+      - name: 'Dependency Review'
+        uses: actions/dependency-review-action@v4
 
       - name: Jacoco Code Coverage
         run: mvn jacoco:report
