@@ -8,7 +8,7 @@ test('Always true test', () => {
 
 test('Heading should be Vite + React', () => {
   render(<App />);
-  const headingElement = screen.getByText('Vite + React');
+  const headingElement = screen.getByText('Vite + React!');
   expect(headingElement).toBeInTheDocument();
 });
 
