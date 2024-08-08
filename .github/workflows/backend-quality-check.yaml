@@ -56,8 +56,11 @@ jobs:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review 
 
-      - name: Build with Maven
-        run: mvn clean verify
+      - name: Install Maven Dependencies
+        run: mvn clean install
+
+      - name: Build and Run Tests
+        run: mvn test --batch-mode --fail-at-end
 
       - name: Publish Test Report
         if: success() || failure()
