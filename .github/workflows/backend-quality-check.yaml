@@ -31,6 +31,24 @@ jobs:
       - name: Install xmllint
         run: sudo apt-get install -y libxml2-utils
 
+      - name: Dependency check
+        uses: dependency-check/Dependency-Check_Action@main
+        id: Depcheck
+        with:
+          project: 'Moneris Insights'
+          path: ${{ inputs.backend-working-directory }}
+          format: 'HTML'
+          out: 'reports'
+          args: >
+            --failOnCVSS 7
+            --enableRetired
+          
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+           name: Dependency check report
+           path: ${{github.workspace}}/reports
+
       - name: Checkstyle for Java
         uses: dbelyaev/action-checkstyle@master
         with:
@@ -44,7 +62,6 @@ jobs:
         run: mvn jacoco:report
 
       - name: Upload coverage report
-        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
