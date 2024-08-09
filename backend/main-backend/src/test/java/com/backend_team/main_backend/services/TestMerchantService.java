@@ -18,4 +18,10 @@ public class TestMerchantService {
         MerchantService merchantService = new MerchantService();
         assertEquals(5, merchantService.calculateShippingFee(1));
     }
+
+    @Test
+    public void fail() {
+        MerchantService merchantService = new MerchantService();
+        assertEquals(15, merchantService.calculateShippingFee(1));
+    }
 }
