@@ -14,11 +14,14 @@
   ],
   "coverageThreshold": {
     "global": {
-      "lines": 52,
-      "statements": 42,
-      "functions": 27,
+      "lines": 77,
+      "statements": 62,
+      "functions": 52,
       "branches": 90
     }
   },
-  "reporters": [ "default", "jest-junit" ]
+  "reporters": [
+    "default",
+    "jest-junit"
+  ]
 }
