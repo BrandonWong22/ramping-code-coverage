@@ -4,10 +4,12 @@ import com.backend_team.main_backend.models.User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.Base64;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.HashMap;
@@ -119,29 +121,16 @@ public class UserService {
         return true;
     }
 
-    public void insecureMethod(String command, String serialized) {
-        // Vulnerability: Hardcoded credentials
-        String username = "admin";
-        String password = "admin123"; // Hardcoded password
-
-        // Vulnerability: Command Injection
-        try {
-            Process process = Runtime.getRuntime().exec(command);
-            process.waitFor();
-            System.out.println("Command executed: " + command);
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // Vulnerability: Insecure Deserialization
-        try {
-            byte[] data = Base64.getDecoder().decode(serialized);
-            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-            Object obj = ois.readObject();
-            System.out.println("Deserialized object: " + obj.toString());
-            ois.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    private static final String GITHUB_API_URL = "https://api.github.com/repos/your-username/your-repo/dispatches";
+    private static final String GITHUB_TOKEN = "your_github_token";
+    public String triggerCodeQLAnalysis() {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + GITHUB_TOKEN);
+        headers.set("Accept", "application/vnd.github.everest-preview+json");
+        String requestBody = "{ \"event_type\": \"trigger-codeql-analysis\" }";
+        HttpEntity < String > entity = new HttpEntity < > (requestBody, headers);
+        ResponseEntity < String > response = restTemplate.exchange(GITHUB_API_URL, HttpMethod.POST, entity, String.class);
+        return response.getBody();
     }
 }
