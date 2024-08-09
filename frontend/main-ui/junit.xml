@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="5" failures="1" errors="0" time="12.225">
+  <testsuite name="App Component" errors="0" failures="1" skipped="0" timestamp="2024-08-09T14:50:59" time="6.997" tests="5">
+    <testcase classname="App Component renders the app title and description" name="App Component renders the app title and description" time="0.036">
+    </testcase>
+    <testcase classname="App Component renders Vite and React logos" name="App Component renders Vite and React logos" time="0.006">
+    </testcase>
+    <testcase classname="App Component button starts with count of 0" name="App Component button starts with count of 0" time="0.022">
+    </testcase>
+    <testcase classname="App Component increments count when button is clicked" name="App Component increments count when button is clicked" time="0.01">
+    </testcase>
+    <testcase classname="App Component renders editable code text" name="App Component renders editable code text" time="0.004">
+      <failure>TestingLibraryElementError: Unable to find an element with the text: /Edit src\/App.tsx/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div&gt;
+      &lt;a
+        href=&quot;https://vitejs.dev&quot;
+        target=&quot;_blank&quot;
+      &gt;
+        &lt;img
+          alt=&quot;Vite logo&quot;
+          class=&quot;logo&quot;
+          src=&quot;[object Object]&quot;
+        /&gt;
+      &lt;/a&gt;
+      &lt;a
+        href=&quot;https://react.dev&quot;
+        target=&quot;_blank&quot;
+      &gt;
+        &lt;img
+          alt=&quot;React logo&quot;
+          class=&quot;logo react&quot;
+          src=&quot;[object Object]&quot;
+        /&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;h1&gt;
+      Vite + React
+    &lt;/h1&gt;
+    &lt;div
+      class=&quot;card&quot;
+    &gt;
+      &lt;button&gt;
+        count is 
+        0
+      &lt;/button&gt;
+      &lt;p&gt;
+        Edit 
+        &lt;code&gt;
+          src/App.tsx
+        &lt;/code&gt;
+         and save to test HMR
+      &lt;/p&gt;
+    &lt;/div&gt;
+    &lt;p
+      class=&quot;read-the-docs&quot;
+    &gt;
+      Click on the Vite and React logos to learn more
+    &lt;/p&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+    at Object.getElementError (/Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/@testing-library/dom/dist/config.js:37:19)
+    at /Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+    at /Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+    at /Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+    at Object.getByText (/Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/src/main-ui.test.tsx:63:32)
+    at Promise.then.completed (/Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (/Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/bwong/Desktop/dev/react-vite-with-jest-main/frontend/main-ui/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+  </testsuite>
+</testsuites>
