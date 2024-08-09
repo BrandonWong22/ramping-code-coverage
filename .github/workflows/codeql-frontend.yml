@@ -1,6 +1,8 @@
 name: "CodeQL Frontend"
 
 on:
+  push:
+    branches: [main]
   workflow_call:
     inputs:
       ui-working-directory:
