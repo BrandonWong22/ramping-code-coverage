@@ -17,3 +17,9 @@ test('Heading component', () => {
   const headingElement = screen.getByText('Hello');
   expect(headingElement).toBeInTheDocument();
 });
+
+test('Fail unit test', () => {
+  render(<HeadingComponent />);
+  const headingElement = screen.getByText('Hello FAIL');
+  expect(headingElement).toBeInTheDocument();
+});
