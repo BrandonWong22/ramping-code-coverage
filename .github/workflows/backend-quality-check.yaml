@@ -211,3 +211,7 @@ jobs:
               repo: context.repo.repo,
               body: 'PR coverage does not exceed the required coverage.'
             })
+      - name: Fails if coverage is not minimum
+        if: steps.check-if-coverage-exceeds-cap.outputs.exceedsCap == 'false'
+        run: |
+          exit 1
