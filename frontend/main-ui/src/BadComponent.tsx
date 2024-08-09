@@ -1,31 +1,51 @@
-// import React, { useState, ChangeEvent } from 'react';
+import { useState } from 'react';
+import axios from 'axios';
 
-// const BadComponent: React.FC = () => {
-//   const [comment, setComment] = useState<string>('');
+const TriggerCodeQLButton = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
-//   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-//     setComment(event.target.value);
-//   };
+  const triggerCodeQL = async () => {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
 
-//   return (
-//     <div>
-//       <h1>Leave a Comment</h1>
-//       <textarea
-//         rows={4}
-//         cols={50}
-//         placeholder="Type your comment here..."
-//         onChange={handleChange}
-//         value={comment}
-//       />
-//       <div>
-//         <h2>Preview:</h2>
-//         <div
-//           // This introduces a potential XSS vulnerability
-//           dangerouslySetInnerHTML={{ __html: comment }}
-//         />
-//       </div>
-//     </div>
-//   );
-// };
+    try {
+      // Example API request to create a commit or trigger a workflow
+      // Replace with your actual API call logic
+      const response = await axios.post(
+        'https://api.github.com/repos/your-username/your-repo/dispatches',
+        {
+          event_type: 'trigger-codeql-analysis',
+        },
+        {
+          headers: {
+            Authorization: `Bearer YOUR_GITHUB_TOKEN`,
+            Accept: 'application/vnd.github.everest-preview+json',
+          },
+        }
+      );
 
-// export default BadComponent;
+      if (response.status === 204) {
+        setSuccess(true);
+      }
+    } catch (err) {
+      setError('Failed to trigger CodeQL analysis');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={triggerCodeQL} disabled={loading}>
+        {loading ? 'Triggering...' : 'Trigger CodeQL Analysis'}
+      </button>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {success && <p style={{ color: 'green' }}>CodeQL analysis triggered successfully!</p>}
+    </div>
+  );
+};
+
+export default TriggerCodeQLButton;
