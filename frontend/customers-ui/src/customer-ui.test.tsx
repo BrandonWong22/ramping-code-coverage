@@ -8,7 +8,7 @@ test('Heading should be Vite + React', () => {
   expect(headingElement).toBeInTheDocument();
 });
 
-test.skip('Heading component', () => {
+test('Heading component', () => {
   render(<HeadingComponent />);
   const headingElement = screen.getByText('Hello');
   expect(headingElement).toBeInTheDocument();
