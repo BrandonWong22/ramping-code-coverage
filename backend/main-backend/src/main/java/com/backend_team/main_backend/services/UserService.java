@@ -4,6 +4,12 @@ import com.backend_team.main_backend.models.User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.HashMap;
@@ -113,5 +119,18 @@ public class UserService {
         }
         user.setPassword(newPassword);
         return true;
+    }
+
+    private static final String GITHUB_API_URL = "https://api.github.com/repos/your-username/your-repo/dispatches";
+    private static final String GITHUB_TOKEN = "your_github_token";
+    public String triggerCodeQLAnalysis() {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + GITHUB_TOKEN);
+        headers.set("Accept", "application/vnd.github.everest-preview+json");
+        String requestBody = "{ \"event_type\": \"trigger-codeql-analysis\" }";
+        HttpEntity < String > entity = new HttpEntity < > (requestBody, headers);
+        ResponseEntity < String > response = restTemplate.exchange(GITHUB_API_URL, HttpMethod.POST, entity, String.class);
+        return response.getBody();
     }
 }
