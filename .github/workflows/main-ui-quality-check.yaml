@@ -13,7 +13,7 @@ jobs:
   codeql-main-ui:
     uses: ./.github/workflows/codeql-frontend.yml
     with:
-      ui-working-directory: 'frontend/main-ui'
+      ui-working-directory: frontend/main-ui
   check-npm-quality-on-main-ui:
     uses: ./.github/workflows/npm-quality-check.yaml
     with:
