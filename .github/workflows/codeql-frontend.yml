@@ -12,9 +12,7 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch:
+  workflow_call:
     inputs:
       ui-working-directory:
         description: 'The path of the frontend'
