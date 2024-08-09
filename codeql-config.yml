@@ -2,6 +2,6 @@ paths:
  - 'frontend/main-ui'
 paths-ignore:
  - 'backend/main-backend/**'
- - 'backend/notification-backend/**'
+#  - 'backend/notification-backend/**'
 #  - '**/*.test.tsx'
 #  - '**/__tests__/**'
