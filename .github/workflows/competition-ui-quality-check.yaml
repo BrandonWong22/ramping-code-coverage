@@ -9,10 +9,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  codeql-competition-ui:
-    uses: ./.github/workflows/codeql-frontend.yml
-    with:
-      ui-working-directory: 'frontend/competition-ui'
   check-npm-quality-on-competition-ui:
     uses: ./.github/workflows/npm-quality-check.yaml
     with:

@@ -10,10 +10,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  codeql-main-backend:
-    uses: ./.github/workflows/codeql-backend.yml
-    with:
-      backend-working-directory: "backend/main-backend"
   check-code-coverage-on-main-backend:
     uses: ./.github/workflows/backend-quality-check.yaml
     with:

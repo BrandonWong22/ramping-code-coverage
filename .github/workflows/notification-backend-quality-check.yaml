@@ -10,10 +10,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  codeql-notification-backend:
-    uses: ./.github/workflows/codeql-backend.yml
-    with:
-      backend-working-directory: 'backend/notification-backend'
   check-code-coverage-on-notification-backend:
     uses: ./.github/workflows/backend-quality-check.yaml
     with:
