@@ -1,4 +1,4 @@
-name: "CodeQL Frontend"
+name: "CodeQL Backend"
 
 on:
   workflow_call:
