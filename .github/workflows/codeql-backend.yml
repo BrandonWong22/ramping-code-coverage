@@ -12,8 +12,6 @@
 name: "CodeQL Backend"
 
 on:
-  push:
-    branches: [ "main" ]
   workflow_dispatch:
     inputs:
       backend-working-directory:
